@@ -264,7 +264,7 @@ public:
     }
 };
 
-bool loose()
+bool lose()
 {
     return false;
 }
@@ -298,7 +298,7 @@ int main()
     menu.printHeader();
     menu.Options();
     menu.getUserInput();
-    while (!(loose() || win()))
+    while (!(lose() || win()))
     {
         const char userinput = getUserInput_move();
         game_board.player.move(userinput);
