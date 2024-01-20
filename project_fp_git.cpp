@@ -98,8 +98,8 @@ public:
         }
 
         // تولید مختصات تصادفی
-        x = rand() % (15) + 2;
-        y = rand() % (14) + 2;
+        x = rand() % (16 - 2 + 1) + 2;
+        y = rand() % (17 - 4 + 1) + 2;
     }
 
     void display()
@@ -114,11 +114,8 @@ public:
         cout << "\033[" << 20 << ";" << 1 << "H";
     }
 
-    void move(Player &player, Zombie *otherZombies, int zombieCount, int index)
+    void move(Player &player)
     {
-        int original_x = x;
-        int original_y = y;
-
         if (player.x > x)
         {
             x++;
@@ -135,40 +132,6 @@ public:
         else if (player.y < y)
         {
             y--;
-        }
-
-        // بررسی تداخل با سایر زامبی‌ها
-        for (int i = 0; i < zombieCount; i++)
-        {
-            if (i != index) // جلوگیری از بررسی زامبی خود
-            {
-                if (x == otherZombies[i].x && y == otherZombies[i].y)
-                {
-                    // در صورت تداخل، عدم تکون زامبی
-                    x = original_x;
-                    y = original_y;
-                    break; // خروج از حلقه، زیرا تداخل با یک زامبی کافی است
-                }
-            }
-        }
-
-        // محدودیت‌های حرکت زامبی
-        if (x < 2)
-        {
-            x = 2;
-        }
-        else if (x > 16)
-        {
-            x = 16;
-        }
-
-        if (y < 2)
-        {
-            y = 2;
-        }
-        else if (y > 18)
-        {
-            y = 18;
         }
     }
 };
@@ -218,12 +181,12 @@ public:
     }
     void HealthDrawer()
     {
-        cout << "{";
+        cout << "[";
         for (int i = 0; i < HealthNumber; i++)
         {
             cout << " |";
         }
-        cout << " }";
+        cout << " ]";
     }
 };
 
@@ -245,47 +208,48 @@ public:
     {
     }
 };
-// char getUserInput_setting()
-// {
-//     char sound = getch();
-//     return sound;
-// }
 
-// class Game_Setting
-// {
-// public:
-//     int count = 0;
-//     char step = getUserInput_setting();
+class Game_Setting
+{
+public:
+    int count = 0;
 
-//     void Setting()
-//     {
-//         Clear_scr();
-//         cout << "final level is: 20" << endl;
-//         if (count % 2 == 0)
-//         {
-//             cout << "Sound is not mute!" << endl;
-//             cout << "Do you want to mute the sound?" << endl;
-//         }
-//         else if (count % 2 == 1)
-//         {
-//             cout << "Sound is mute!" << endl;
-//             cout << "Do you want to unmute the sound?" << endl;
-//         }
-//         // MainMenu menu;
-//         if (step == 'y')
-//         {
-//             count++;
-//             Setting();
-//         }
-//         // else if (step == 'n')
-//         // {
-//         //     Clear_scr();
-//         //     menu.printHeader();
-//         //     menu.Options();
-//         //     menu.getUserInput();
-//         // }
-//     }
-// };
+    void Setting()
+    {
+        Clear_scr();
+        cout << "final level is: 20" << endl;
+        if (count % 2 == 0)
+        {
+            cout << "Sound is not mute!" << endl;
+            cout << "Do you want to mute the sound?" << endl;
+        }
+        else if (count % 2 == 1)
+        {
+            cout << "Sound is mute!" << endl;
+            cout << "Do you want to unmute the sound?" << endl;
+        }
+
+        char step = getUserInput_setting();
+
+        if (step == 'y')
+        {
+            count++;
+            Setting();
+        }
+        else if (step == 'n')
+        {
+            // Header();
+        }
+    }
+
+    char getUserInput_setting()
+    {
+        char sound ;
+        sound = _getch();
+
+        return sound;
+    }
+};
 
 class Game_board
 {
@@ -301,9 +265,9 @@ public:
     Zombie zombies[20];
     void Details()
     {
-        cout << "Level: " << level.levelNumber << " ";
-        cout << "Vaccine: " << vaccine.VaccineNumber << " ";
-        cout << " Credit: " << credit.CreditNumber << " ";
+        cout << "Level: " << level.levelNumber << "  ";
+        cout << "Vaccine: " << vaccine.VaccineNumber << "  ";
+        cout << " Credit: " << credit.CreditNumber << "  ";
         cout << "Round: " << round.RoundNumber << endl;
         cout << "Health: ";
         health.HealthDrawer();
@@ -339,32 +303,10 @@ public:
         }
         // Use the member variable player instead of creating a local Player object
         player.display();
-
         for (int i = 0; i < level.levelNumber; i++)
         {
             // zombies[i].setRandomCoordinates();
-            for (int j = 0; j < level.levelNumber; j++)
-            {
-                if (!is_same_position(zombies[i], zombies[j], i, j))
-                {
-                    zombies[i].display();
-                }
-                else
-                {
-                    break;
-                }
-            }
-        }
-    }
-    bool is_same_position(Zombie &zombie_1, Zombie &zombie_2, int index_1, int index_2)
-    {
-        if (zombie_1.x == zombie_2.x && zombie_1.y == zombie_2.y && index_1 != index_2)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
+            zombies[i].display();
         }
     }
 };
@@ -394,7 +336,6 @@ public:
         cout << "  ▒ ░ ░   ░ ░  ░░ ░ ▒  ░ ░  ▒    ░ ▒ ▒░ ░  ░      ░ ░ ░  ░       ░      ░ ▒ ▒░        ░     ▒ ░▒░ ░ ░ ░  ░     ░   ░   ▒   ▒▒ ░  ░      ░ ░ ░  ░    ░  ░\n";
         cout << "  ░   ░     ░     ░ ░  ░       ░ ░ ░ ▒  ░      ░      ░        ░      ░ ░ ░ ▒       ░       ░  ░░ ░   ░      ░ ░   ░   ░   ▒  ░      ░      ░          ░\n";
         cout << "    ░       ░  ░    ░  ░ ░         ░ ░         ░      ░  ░                ░ ░               ░  ░  ░   ░  ░         ░       ░  ░      ░      ░  ░    ░   \n";
-
         cout << "                       ░                                                                                                                                                                  \n"
              << Reset;
         ;
@@ -402,7 +343,7 @@ public:
     void Options()
     {
         Game_board gameboard;
-        // Game_Setting game_Setting;
+        Game_Setting game_Setting;
 
         cout << "𝟙-𝕟𝕖𝕨 𝕘𝕒𝕞𝕖" << endl;
         cout << "𝟚-𝕊𝕖𝕥𝕥𝕚𝕟𝕘𝕤" << endl;
@@ -415,10 +356,10 @@ public:
         {
             gameboard.print_Game_board();
         }
-        // else if (userInput == 2)
-        // {
-        //     game_Setting.Setting();
-        // }
+        else if (userInput == 2)
+        {
+            game_Setting.Setting();
+        }
     }
 
     int getUserInput()
@@ -445,14 +386,22 @@ char getUserInput_move()
     char input = _getch();
     return input;
 }
+
+void Header() // نمایش منوی اصلی بازی
+{
+    MainMenu main;
+    Clear_scr();
+    main.printHeader();
+    main.Options();
+
+}
+
 int main()
 {
     int count = 0;
-    MainMenu menu;
     Game_board game_board;
-    Clear_scr();
-    menu.printHeader();
-    menu.Options();
+
+    Header();
     char userInput; // تغییر اینجا به char
 
     while (!(lose() || win()))
@@ -463,7 +412,7 @@ int main()
         {
             for (int i = 0; i < 20; i++)
             {
-                game_board.zombies[i].move(game_board.player, game_board.zombies, game_board.level.levelNumber, i); // حرکت زامبی‌ها به سمت بازیکن
+                game_board.zombies[i].move(game_board.player); // حرکت زامبی‌ها به سمت بازیکن
             }
         }
         game_board.print_Game_board();
