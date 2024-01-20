@@ -98,8 +98,8 @@ public:
         }
 
         // تولید مختصات تصادفی
-        x = rand() % (16 - 2 + 1) + 2;
-        y = rand() % (17 - 4 + 1) + 2;
+        x = rand() % (15) + 2;
+        y = rand() % (14) + 2;
     }
 
     void display()
@@ -114,8 +114,11 @@ public:
         cout << "\033[" << 20 << ";" << 1 << "H";
     }
 
-    void move(Player &player)
+    void move(Player &player, Zombie *otherZombies, int zombieCount, int index)
     {
+        int original_x = x;
+        int original_y = y;
+
         if (player.x > x)
         {
             x++;
@@ -132,6 +135,40 @@ public:
         else if (player.y < y)
         {
             y--;
+        }
+
+        // بررسی تداخل با سایر زامبی‌ها
+        for (int i = 0; i < zombieCount; i++)
+        {
+            if (i != index) // جلوگیری از بررسی زامبی خود
+            {
+                if (x == otherZombies[i].x && y == otherZombies[i].y)
+                {
+                    // در صورت تداخل، عدم تکون زامبی
+                    x = original_x;
+                    y = original_y;
+                    break; // خروج از حلقه، زیرا تداخل با یک زامبی کافی است
+                }
+            }
+        }
+
+        // محدودیت‌های حرکت زامبی
+        if (x < 2)
+        {
+            x = 2;
+        }
+        else if (x > 16)
+        {
+            x = 16;
+        }
+
+        if (y < 2)
+        {
+            y = 2;
+        }
+        else if (y > 18)
+        {
+            y = 18;
         }
     }
 };
@@ -302,10 +339,32 @@ public:
         }
         // Use the member variable player instead of creating a local Player object
         player.display();
+
         for (int i = 0; i < level.levelNumber; i++)
         {
             // zombies[i].setRandomCoordinates();
-            zombies[i].display();
+            for (int j = 0; j < level.levelNumber; j++)
+            {
+                if (!is_same_position(zombies[i], zombies[j], i, j))
+                {
+                    zombies[i].display();
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+    }
+    bool is_same_position(Zombie &zombie_1, Zombie &zombie_2, int index_1, int index_2)
+    {
+        if (zombie_1.x == zombie_2.x && zombie_1.y == zombie_2.y && index_1 != index_2)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 };
@@ -404,7 +463,7 @@ int main()
         {
             for (int i = 0; i < 20; i++)
             {
-                game_board.zombies[i].move(game_board.player); // حرکت زامبی‌ها به سمت بازیکن
+                game_board.zombies[i].move(game_board.player, game_board.zombies, game_board.level.levelNumber, i); // حرکت زامبی‌ها به سمت بازیکن
             }
         }
         game_board.print_Game_board();
