@@ -75,11 +75,72 @@ public:
     }
 };
 
+class Zombie
+{
+public:
+    int x;
+    int y;
+
+    // سازنده با مقادیر اولیه
+    Zombie()
+    {
+        setRandomCoordinates();
+    }
+
+    void setRandomCoordinates()
+    {
+        // تنظیم seed یک بار در ابتدای برنامه
+        static bool seedSet = false;
+        if (!seedSet)
+        {
+            srand(static_cast<unsigned>(time(0)));
+            seedSet = true;
+        }
+
+        // تولید مختصات تصادفی
+        x = rand() % (16 - 2 + 1) + 2;
+        y = rand() % (17 - 4 + 1) + 2;
+    }
+
+    void display()
+    {
+
+        // استفاده از ANSI Escape برای تنظیم رنگ
+
+        cout << "\033[" << y << ";" << x << "H"; // Set cursor position
+        cout << "\033[31m";                      // ANSI escape code for red color
+        cout << "Z";
+        cout << "\033[0m"; // Reset color to default
+        cout << "\033[" << 20 << ";" << 1 << "H";
+    }
+
+    void move(Player &player)
+    {
+        if (player.x > x)
+        {
+            x++;
+        }
+        else if (player.x < x)
+        {
+            x--;
+        }
+
+        if (player.y > y)
+        {
+            y++;
+        }
+        else if (player.y < y)
+        {
+            y--;
+        }
+    }
+};
+
 class Level
 {
 public:
     int levelNumber;
-    Level(int number = 0) : levelNumber(number)
+    Level(int number = 2) : levelNumber(number)
     {
     }
 };
@@ -147,6 +208,47 @@ public:
     {
     }
 };
+// char getUserInput_setting()
+// {
+//     char sound = getch();
+//     return sound;
+// }
+
+// class Game_Setting
+// {
+// public:
+//     int count = 0;
+//     char step = getUserInput_setting();
+
+//     void Setting()
+//     {
+//         Clear_scr();
+//         cout << "final level is: 20" << endl;
+//         if (count % 2 == 0)
+//         {
+//             cout << "Sound is not mute!" << endl;
+//             cout << "Do you want to mute the sound?" << endl;
+//         }
+//         else if (count % 2 == 1)
+//         {
+//             cout << "Sound is mute!" << endl;
+//             cout << "Do you want to unmute the sound?" << endl;
+//         }
+//         // MainMenu menu;
+//         if (step == 'y')
+//         {
+//             count++;
+//             Setting();
+//         }
+//         // else if (step == 'n')
+//         // {
+//         //     Clear_scr();
+//         //     menu.printHeader();
+//         //     menu.Options();
+//         //     menu.getUserInput();
+//         // }
+//     }
+// };
 
 class Game_board
 {
@@ -159,6 +261,7 @@ public:
     Ammo ammo;
     Kill kill;
     Player player;
+    Zombie zombies[20];
     void Details()
     {
         cout << "Level: " << level.levelNumber << " ";
@@ -199,15 +302,12 @@ public:
         }
         // Use the member variable player instead of creating a local Player object
         player.display();
+        for (int i = 0; i < level.levelNumber; i++)
+        {
+            // zombies[i].setRandomCoordinates();
+            zombies[i].display();
+        }
     }
-
-    // char getUserInput()
-    // {
-    //     char userInput;
-    //     // Get the user input without waiting for Enter
-    //     userInput = getch();
-    //     return userInput;
-    // }
 };
 
 class MainMenu
@@ -243,16 +343,23 @@ public:
     void Options()
     {
         Game_board gameboard;
+        // Game_Setting game_Setting;
+
         cout << "𝟙-𝕟𝕖𝕨 𝕘𝕒𝕞𝕖" << endl;
         cout << "𝟚-𝕊𝕖𝕥𝕥𝕚𝕟𝕘𝕤" << endl;
         cout << "𝟛-ℂ𝕣𝕖𝕕𝕚𝕥𝕤" << endl;
         cout << "𝟜-ℍ𝕖𝕝𝕡" << endl;
         cout << "𝟝-𝔼𝕩𝕚𝕥" << endl;
         int userInput = getUserInput();
+
         if (userInput == 1)
         {
             gameboard.print_Game_board();
         }
+        // else if (userInput == 2)
+        // {
+        //     game_Setting.Setting();
+        // }
     }
 
     int getUserInput()
@@ -274,17 +381,6 @@ bool win()
     return false;
 }
 
-// void move_player(Player &player)
-// {
-//     Game_board game_board; // ایجاد یک شیء از Game_board
-//     char userInput = player.getUserInput();
-//     if (userInput == 's')
-//     {
-//         player.move(player.x, player.y - 1);
-//         game_board.print_Game_board();
-//     }
-// }
-
 char getUserInput_move()
 {
     char input = _getch();
@@ -292,16 +388,28 @@ char getUserInput_move()
 }
 int main()
 {
+    int count = 0;
     MainMenu menu;
     Game_board game_board;
     Clear_scr();
     menu.printHeader();
     menu.Options();
-    menu.getUserInput();
+    char userInput; // تغییر اینجا به char
+
     while (!(lose() || win()))
     {
-        const char userinput = getUserInput_move();
-        game_board.player.move(userinput);
+        userInput = getUserInput_move();   // دریافت جهت حرکت از کاربر
+        game_board.player.move(userInput); // حرکت بازیکن بر اساس جهت حرکت
+        if (count % 2 == 0)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                game_board.zombies[i].move(game_board.player); // حرکت زامبی‌ها به سمت بازیکن
+            }
+        }
         game_board.print_Game_board();
+        count++;
     }
+
+    return 0;
 }
