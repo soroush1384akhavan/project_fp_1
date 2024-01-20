@@ -173,6 +173,25 @@ public:
     }
 };
 
+class door
+{
+public:
+    int x;
+    int y;
+    door(int initialX = 9, int initialY = 17) : x(initialX), y(initialY)
+    {
+    }
+
+    void display()
+    {
+        cout << "\033[" << y << ";" << x << "H"; // Set cursor position
+        cout << "\033[36m";                      // ANSI escape code for red color
+        cout << "D";
+        cout << "\033[0m"; // Reset color to default
+        cout << "\033[" << 20 << ";" << 1 << "H";
+    }
+};
+
 class Level
 {
 public:
@@ -245,48 +264,48 @@ public:
     {
     }
 };
-// char getUserInput_setting()
-// {
-//     char sound = getch();
-//     return sound;
-// }
 
-// class Game_Setting
-// {
-// public:
-//     int count = 0;
-//     char step = getUserInput_setting();
+class Game_Setting
+{
+public:
+    int count = 0;
 
-//     void Setting()
-//     {
-//         Clear_scr();
-//         cout << "final level is: 20" << endl;
-//         if (count % 2 == 0)
-//         {
-//             cout << "Sound is not mute!" << endl;
-//             cout << "Do you want to mute the sound?" << endl;
-//         }
-//         else if (count % 2 == 1)
-//         {
-//             cout << "Sound is mute!" << endl;
-//             cout << "Do you want to unmute the sound?" << endl;
-//         }
-//         // MainMenu menu;
-//         if (step == 'y')
-//         {
-//             count++;
-//             Setting();
-//         }
-//         // else if (step == 'n')
-//         // {
-//         //     Clear_scr();
-//         //     menu.printHeader();
-//         //     menu.Options();
-//         //     menu.getUserInput();
-//         // }
-//     }
-// };
+    void Setting()
+    {
+        Clear_scr();
+        cout << "final level is: 20" << endl;
+        if (count % 2 == 0)
+        {
+            cout << "Sound is not mute!" << endl;
+            cout << "Do you want to mute the sound?" << endl;
+        }
+        else if (count % 2 == 1)
+        {
+            cout << "Sound is mute!" << endl;
+            cout << "Do you want to unmute the sound?" << endl;
+        }
 
+        char step = getUserInput_setting();
+
+        if (step == 'y')
+        {
+            count++;
+            Setting();
+        }
+        else if (step == 'n')
+        {
+            // Header();
+        }
+    }
+
+    char getUserInput_setting()
+    {
+        char sound;
+        sound = _getch();
+
+        return sound;
+    }
+};
 class Game_board
 {
 public:
@@ -402,7 +421,7 @@ public:
     void Options()
     {
         Game_board gameboard;
-        // Game_Setting game_Setting;
+        Game_Setting game_Setting;
 
         cout << "𝟙-𝕟𝕖𝕨 𝕘𝕒𝕞𝕖" << endl;
         cout << "𝟚-𝕊𝕖𝕥𝕥𝕚𝕟𝕘𝕤" << endl;
@@ -415,10 +434,10 @@ public:
         {
             gameboard.print_Game_board();
         }
-        // else if (userInput == 2)
-        // {
-        //     game_Setting.Setting();
-        // }
+        else if (userInput == 2)
+        {
+            game_Setting.Setting();
+        }
     }
 
     int getUserInput()
@@ -445,14 +464,21 @@ char getUserInput_move()
     char input = _getch();
     return input;
 }
+
+void Header() // نمایش منوی اصلی بازی
+{
+    MainMenu main;
+    Clear_scr();
+    main.printHeader();
+    main.Options();
+}
+
 int main()
 {
     int count = 0;
-    MainMenu menu;
+    // MainMenu menu;
     Game_board game_board;
-    Clear_scr();
-    menu.printHeader();
-    menu.Options();
+    Header();
     char userInput; // تغییر اینجا به char
 
     while (!(lose() || win()))
