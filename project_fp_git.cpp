@@ -99,7 +99,7 @@ public:
 
         // تولید مختصات تصادفی
         x = rand() % (15) + 2;
-        y = rand() % (14) + 2;
+        y = rand() % (13) + 4;
     }
 
     void display()
@@ -173,12 +173,12 @@ public:
     }
 };
 
-class door
+class Door
 {
 public:
     int x;
     int y;
-    door(int initialX = 9, int initialY = 17) : x(initialX), y(initialY)
+    Door(int initialX = 16, int initialY = 18) : x(initialX), y(initialY)
     {
     }
 
@@ -318,6 +318,7 @@ public:
     Kill kill;
     Player player;
     Zombie zombies[20];
+    Door door;
     void Details()
     {
         cout << "Level: " << level.levelNumber << " ";
@@ -330,6 +331,23 @@ public:
         cout << "Ammo: " << ammo.AmmoNumber << "/" << ammo.AmmoMagazine << " ";
         cout << "Kill: " << kill.KillNumber;
     }
+    void Reset_position()
+    {
+        player.x = 2;
+        player.y = 4;
+        for (int i = 0; i < level.levelNumber; i++)
+        {
+            zombies[i].setRandomCoordinates();
+            for (int j = 0; j < i; j++)
+            {
+                while (is_same_position(zombies[i], zombies[j], i, j))
+                {
+                    zombies[i].setRandomCoordinates();
+                }
+            }
+        }
+    }
+
     void print_Game_board()
     {
         Clear_scr();
@@ -358,6 +376,7 @@ public:
         }
         // Use the member variable player instead of creating a local Player object
         player.display();
+        door.display();
 
         for (int i = 0; i < level.levelNumber; i++)
         {
@@ -454,8 +473,12 @@ bool lose()
     return false;
 }
 
-bool win()
+bool win(Game_board game_board)
 {
+    if (game_board.player.x == game_board.door.x && game_board.player.y == game_board.door.y)
+    {
+        return true;
+    }
     return false;
 }
 
@@ -481,7 +504,7 @@ int main()
     Header();
     char userInput; // تغییر اینجا به char
 
-    while (!(lose() || win()))
+    while (!(lose()))
     {
         userInput = getUserInput_move();   // دریافت جهت حرکت از کاربر
         game_board.player.move(userInput); // حرکت بازیکن بر اساس جهت حرکت
@@ -494,7 +517,13 @@ int main()
         }
         game_board.print_Game_board();
         count++;
+        if (win(game_board))
+        {
+            game_board.level.levelNumber++;
+            Clear_scr();
+            game_board.Reset_position();
+            game_board.print_Game_board();
+        }
     }
-
     return 0;
 }
