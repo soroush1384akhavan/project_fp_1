@@ -82,11 +82,13 @@ class Zombie
 public:
     int x;
     int y;
+    bool isActive;
 
     // سازنده با مقادیر اولیه
     Zombie()
     {
         setRandomCoordinates();
+        isActive = true;
     }
 
     void setRandomCoordinates()
@@ -106,14 +108,16 @@ public:
 
     void display()
     {
+        if (isActive)
+        {
+            // استفاده از ANSI Escape برای تنظیم رنگ
 
-        // استفاده از ANSI Escape برای تنظیم رنگ
-
-        cout << "\033[" << y << ";" << x << "H"; // Set cursor position
-        cout << "\033[31m";                      // ANSI escape code for red color
-        cout << "Z";
-        cout << "\033[0m"; // Reset color to default
-        cout << "\033[" << 20 << ";" << 1 << "H";
+            cout << "\033[" << y << ";" << x << "H"; // Set cursor position
+            cout << "\033[31m";                      // ANSI escape code for red color
+            cout << "Z";
+            cout << "\033[0m"; // Reset color to default
+            cout << "\033[" << 20 << ";" << 1 << "H";
+        }
     }
 
     void move(Player &player, Zombie *otherZombies, int zombieCount, int index)
@@ -171,6 +175,110 @@ public:
         else if (y > 18)
         {
             y = 18;
+        }
+    }
+};
+
+class Gun
+{
+public:
+    int AmmoNumber;
+    int AmmoMagazine;
+    int range;
+    Gun()
+    {
+        AmmoNumber = 3;
+        AmmoMagazine = 0;
+        range = 3;
+    }
+    void shoot(char direction, Zombie *zombies, Player &player, int &kill)
+    {
+        if (direction == 't' || direction == 'T')
+        {
+            if (AmmoNumber > 0)
+            {
+                AmmoNumber--;
+                for (int i = 0; i < 20; i++)
+                {
+                    if (zombies[i].x == player.x && player.y - zombies[i].y <= range)
+                    {
+                        zombies[i].isActive = false;
+                        kill++;
+                        // cout << "Zombie hit! Zombie at (" << zombies[i].x << ", " << zombies[i].y << ") eliminated." << endl;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                cout << "Out of ammo!" << endl;
+            }
+        }
+
+        if (direction == 'g' || direction == 'G')
+        {
+            if (AmmoNumber > 0)
+            {
+                AmmoNumber--;
+                for (int i = 0; i < 20; i++)
+                {
+                    if (zombies[i].x == player.x && zombies[i].y - player.y <= range)
+                    {
+                        zombies[i].isActive = false;
+                        kill++;
+                        // cout << "Zombie hit! Zombie at (" << zombies[i].x << ", " << zombies[i].y << ") eliminated." << endl;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                cout << "Out of ammo!" << endl;
+            }
+        }
+
+        if (direction == 'h' || direction == 'H')
+        {
+            if (AmmoNumber > 0)
+            {
+                AmmoNumber--;
+                for (int i = 0; i < 20; i++)
+                {
+                    if (zombies[i].y == player.y && zombies[i].x - player.x <= range)
+                    {
+                        zombies[i].isActive = false;
+                        kill++;
+                        // cout << "Zombie hit! Zombie at (" << zombies[i].x << ", " << zombies[i].y << ") eliminated." << endl;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                cout << "Out of ammo!" << endl;
+            }
+        }
+
+        if (direction == 'f' || direction == 'F')
+        {
+            if (AmmoNumber > 0)
+            {
+                AmmoNumber--;
+                for (int i = 0; i < 20; i++)
+                {
+                    if (zombies[i].y == player.y && player.x - zombies[i].x <= range)
+                    {
+                        zombies[i].isActive = false;
+                        kill++;
+                        // cout << "Zombie hit! Zombie at (" << zombies[i].x << ", " << zombies[i].y << ") eliminated." << endl;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                cout << "Out of ammo!" << endl;
+            }
         }
     }
 };
@@ -248,15 +356,15 @@ public:
     }
 };
 
-class Ammo
-{
-public:
-    int AmmoNumber;
-    int AmmoMagazine;
-    Ammo(int numberAmmo = 3, int numberMagazine = 0) : AmmoNumber(numberAmmo), AmmoMagazine(numberMagazine)
-    {
-    }
-};
+// class Ammo
+// {
+// public:
+//     int AmmoNumber;
+//     int AmmoMagazine;
+//     Ammo(int numberAmmo = 3, int numberMagazine = 0) : AmmoNumber(numberAmmo), AmmoMagazine(numberMagazine)
+//     {
+//     }
+// };
 
 class Kill
 {
@@ -316,11 +424,12 @@ public:
     Credit credit;
     Round round;
     Health health;
-    Ammo ammo;
+    // Ammo ammo;
     Kill kill;
     Player player;
     Zombie zombies[20];
     Door door;
+    Gun gun;
     void Details()
     {
         cout << "Level: " << level.levelNumber << " ";
@@ -330,7 +439,7 @@ public:
         cout << "Health: ";
         health.HealthDrawer();
         cout << " ";
-        cout << "Ammo: " << ammo.AmmoNumber << "/" << ammo.AmmoMagazine << " ";
+        cout << "Ammo: " << gun.AmmoNumber << "/" << gun.AmmoMagazine << " ";
         cout << "Kill: " << kill.KillNumber;
     }
     void Reset_position()
@@ -484,7 +593,7 @@ bool win(Game_board game_board)
     return false;
 }
 
-char getUserInput_move()
+char getUserInput()
 {
     char input = _getch();
     return input;
@@ -505,11 +614,18 @@ int main()
     Game_board game_board;
     Header();
     char userInput; // تغییر اینجا به char
-
+    // char userInput_shoot;
     while (!(lose()))
     {
-        userInput = getUserInput_move();   // دریافت جهت حرکت از کاربر
+        userInput = getUserInput();        // دریافت جهت حرکت
         game_board.player.move(userInput); // حرکت بازیکن بر اساس جهت حرکت
+        // userInput_shoot = getUserInput_move_shoot(); // دریافت جهت تیر
+        // game_board.gun.shoot(userInput_shoot, game_board.zombies, game_board.player);
+        // if (userInput == 'T' || userInput == 't')
+        // {
+        //     game_board.gun.shoot(userInput, game_board.zombies, game_board.player, game_board.kill.KillNumber);
+        // }
+        game_board.gun.shoot(userInput, game_board.zombies, game_board.player, game_board.kill.KillNumber);
         if (count % 2 == 0)
         {
             for (int i = 0; i < 20; i++)
@@ -521,6 +637,10 @@ int main()
         count++;
         if (win(game_board))
         {
+            for (int i = 0; i < game_board.level.levelNumber; i++)
+            {
+                game_board.zombies[i].isActive = true;
+            }
             game_board.level.levelNumber++;
             Clear_scr();
             game_board.Reset_position();
