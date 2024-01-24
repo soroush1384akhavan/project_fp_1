@@ -198,14 +198,14 @@ public:
         AmmoMagazine = 0;
         range = 3;
     }
-    void shoot(char direction, Zombie *zombies, Player &player, Kill &kill_)
+    void shoot(char direction, Zombie *zombies, Player &player, Kill &kill_, int Level)
     {
         if (direction == 't' || direction == 'T')
         {
             if (AmmoNumber > 0)
             {
                 AmmoNumber--;
-                for (int i = 0; i < 20; i++)
+                for (int i = 0; i < Level; i++)
                 {
                     if (zombies[i].isActive && zombies[i].x == player.x && 0 <= player.y - zombies[i].y <= range)
                     {
@@ -216,9 +216,6 @@ public:
                     }
                 }
             }
-            else
-            {
-            }
         }
 
         else if (direction == 'g' || direction == 'G')
@@ -226,7 +223,7 @@ public:
             if (AmmoNumber > 0)
             {
                 AmmoNumber--;
-                for (int i = 0; i < 20; i++)
+                for (int i = 0; i < Level; i++)
                 {
                     if (zombies[i].isActive && zombies[i].x == player.x && 0 <= zombies[i].y - player.y <= range)
                     {
@@ -248,7 +245,7 @@ public:
             if (AmmoNumber > 0)
             {
                 AmmoNumber--;
-                for (int i = 0; i < 20; i++)
+                for (int i = 0; i < Level; i++)
                 {
                     if (zombies[i].isActive && zombies[i].y == player.y && 0 <= zombies[i].x - player.x <= range)
                     {
@@ -270,7 +267,7 @@ public:
             if (AmmoNumber > 0)
             {
                 AmmoNumber--;
-                for (int i = 0; i < 20; i++)
+                for (int i = 0; i < Level; i++)
                 {
                     if (zombies[i].isActive && zombies[i].y == player.y && 0 <= player.x - zombies[i].x <= range)
                     {
@@ -371,8 +368,6 @@ public:
 //     {
 //     }
 // };
-
-
 
 class Game_Setting
 {
@@ -627,7 +622,7 @@ int main()
         // }
         if (userInput == 't' || userInput == 'g' || userInput == 'f' || userInput == 'h')
         {
-            game_board.gun.shoot(userInput, game_board.zombies, game_board.player, game_board.kill_);
+            game_board.gun.shoot(userInput, game_board.zombies, game_board.player, game_board.kill_, game_board.level.levelNumber);
         }
         if (count % 2 == 0)
         {
