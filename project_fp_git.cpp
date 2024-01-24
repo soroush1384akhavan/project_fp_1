@@ -2,6 +2,8 @@
 #include <string>
 #include <cstdlib>
 #include <ctime>
+#include <windows.h>
+#include <mmsystem.h>
 #if defined _WIN32
 #include <conio.h>
 #elif defined(__LINUX__) || defined(__gnu_linux__) || defined(__linux__)
@@ -373,22 +375,21 @@ public:
 // };
 
 
-
 class Game_Setting
 {
 public:
-    int count = 0;
+    bool is_mute= true;
 
     void Setting()
     {
         Clear_scr();
         cout << "final level is: 20" << endl;
-        if (count % 2 == 0)
+        if (is_mute)
         {
             cout << "Sound is not mute!" << endl;
             cout << "Do you want to mute the sound?" << endl;
         }
-        else if (count % 2 == 1)
+        else if (!is_mute)
         {
             cout << "Sound is mute!" << endl;
             cout << "Do you want to unmute the sound?" << endl;
@@ -398,7 +399,15 @@ public:
 
         if (step == 'y')
         {
-            count++;
+            if(is_mute == true)
+            {
+                is_mute = false;
+            } 
+            else if(is_mute == false)
+            {
+                is_mute = true;
+            }
+
             Setting();
         }
         else if (step == 'n')
@@ -414,6 +423,11 @@ public:
 
         return sound;
     }
+};
+
+class sound
+{
+    bool play = PlaySound(TEXT("SOUND"), NULL, SND_ASYNC);
 };
 class Game_board
 {
