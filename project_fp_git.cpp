@@ -72,6 +72,7 @@ public:
         {
             x = newX;
             y = newY;
+            Beep(523,500);
         }
     }
 
