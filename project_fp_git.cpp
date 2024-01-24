@@ -72,7 +72,7 @@ public:
         {
             x = newX;
             y = newY;
-            Beep(523,500);
+            Beep(523,5);
         }
     }
 
@@ -428,7 +428,7 @@ public:
 
 class sound
 {
-    bool play = PlaySound(TEXT("SOUND"), NULL, SND_ASYNC);
+    bool start = PlaySound(TEXT("/exit.wiv"), NULL, SND_ASYNC);
 };
 class Game_board
 {
