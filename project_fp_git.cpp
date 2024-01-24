@@ -25,7 +25,14 @@ void Clear_scr()
     system("clear");
 #endif
 }
-
+class Kill
+{
+public:
+    int KillNumber;
+    Kill(int number = 0) : KillNumber(number)
+    {
+    }
+};
 class Player
 {
 public:
@@ -187,11 +194,11 @@ public:
     int range;
     Gun()
     {
-        AmmoNumber = 3;
+        AmmoNumber = 10;
         AmmoMagazine = 0;
         range = 3;
     }
-    void shoot(char direction, Zombie *zombies, Player &player, int &kill)
+    void shoot(char direction, Zombie *zombies, Player &player, Kill &kill_)
     {
         if (direction == 't' || direction == 'T')
         {
@@ -200,10 +207,10 @@ public:
                 AmmoNumber--;
                 for (int i = 0; i < 20; i++)
                 {
-                    if (zombies[i].x == player.x && player.y - zombies[i].y <= range)
+                    if (zombies[i].isActive && zombies[i].x == player.x && 0 <= player.y - zombies[i].y <= range)
                     {
                         zombies[i].isActive = false;
-                        kill++;
+                        kill_.KillNumber++;
                         // cout << "Zombie hit! Zombie at (" << zombies[i].x << ", " << zombies[i].y << ") eliminated." << endl;
                         break;
                     }
@@ -211,21 +218,20 @@ public:
             }
             else
             {
-                cout << "Out of ammo!" << endl;
             }
         }
 
-        if (direction == 'g' || direction == 'G')
+        else if (direction == 'g' || direction == 'G')
         {
             if (AmmoNumber > 0)
             {
                 AmmoNumber--;
                 for (int i = 0; i < 20; i++)
                 {
-                    if (zombies[i].x == player.x && zombies[i].y - player.y <= range)
+                    if (zombies[i].isActive && zombies[i].x == player.x && 0 <= zombies[i].y - player.y <= range)
                     {
                         zombies[i].isActive = false;
-                        kill++;
+                        kill_.KillNumber++;
                         // cout << "Zombie hit! Zombie at (" << zombies[i].x << ", " << zombies[i].y << ") eliminated." << endl;
                         break;
                     }
@@ -233,21 +239,21 @@ public:
             }
             else
             {
-                cout << "Out of ammo!" << endl;
+                // cout << "Out of ammo!" << endl;
             }
         }
 
-        if (direction == 'h' || direction == 'H')
+        else if (direction == 'h' || direction == 'H')
         {
             if (AmmoNumber > 0)
             {
                 AmmoNumber--;
                 for (int i = 0; i < 20; i++)
                 {
-                    if (zombies[i].y == player.y && zombies[i].x - player.x <= range)
+                    if (zombies[i].isActive && zombies[i].y == player.y && 0 <= zombies[i].x - player.x <= range)
                     {
                         zombies[i].isActive = false;
-                        kill++;
+                        kill_.KillNumber++;
                         // cout << "Zombie hit! Zombie at (" << zombies[i].x << ", " << zombies[i].y << ") eliminated." << endl;
                         break;
                     }
@@ -255,21 +261,21 @@ public:
             }
             else
             {
-                cout << "Out of ammo!" << endl;
+                // cout << "Out of ammo!" << endl;
             }
         }
 
-        if (direction == 'f' || direction == 'F')
+        else if (direction == 'f' || direction == 'F')
         {
             if (AmmoNumber > 0)
             {
                 AmmoNumber--;
                 for (int i = 0; i < 20; i++)
                 {
-                    if (zombies[i].y == player.y && player.x - zombies[i].x <= range)
+                    if (zombies[i].isActive && zombies[i].y == player.y && 0 <= player.x - zombies[i].x <= range)
                     {
                         zombies[i].isActive = false;
-                        kill++;
+                        kill_.KillNumber++;
                         // cout << "Zombie hit! Zombie at (" << zombies[i].x << ", " << zombies[i].y << ") eliminated." << endl;
                         break;
                     }
@@ -277,7 +283,7 @@ public:
             }
             else
             {
-                cout << "Out of ammo!" << endl;
+                // cout << "Out of ammo!" << endl;
             }
         }
     }
@@ -366,14 +372,7 @@ public:
 //     }
 // };
 
-class Kill
-{
-public:
-    int KillNumber;
-    Kill(int number = 0) : KillNumber(number)
-    {
-    }
-};
+
 
 class Game_Setting
 {
@@ -425,7 +424,7 @@ public:
     Round round;
     Health health;
     // Ammo ammo;
-    Kill kill;
+    Kill kill_;
     Player player;
     Zombie zombies[20];
     Door door;
@@ -440,7 +439,7 @@ public:
         health.HealthDrawer();
         cout << " ";
         cout << "Ammo: " << gun.AmmoNumber << "/" << gun.AmmoMagazine << " ";
-        cout << "Kill: " << kill.KillNumber;
+        cout << "Kill: " << kill_.KillNumber;
     }
     void Reset_position()
     {
@@ -617,15 +616,19 @@ int main()
     // char userInput_shoot;
     while (!(lose()))
     {
-        userInput = getUserInput();        // دریافت جهت حرکت
-        game_board.player.move(userInput); // حرکت بازیکن بر اساس جهت حرکت
+        userInput = getUserInput(); // دریافت جهت حرکت
+        if (userInput == 'w' || userInput == 'a' || userInput == 's' || userInput == 'd')
+            game_board.player.move(userInput); // حرکت بازیکن بر اساس جهت حرکت
         // userInput_shoot = getUserInput_move_shoot(); // دریافت جهت تیر
         // game_board.gun.shoot(userInput_shoot, game_board.zombies, game_board.player);
         // if (userInput == 'T' || userInput == 't')
         // {
         //     game_board.gun.shoot(userInput, game_board.zombies, game_board.player, game_board.kill.KillNumber);
         // }
-        game_board.gun.shoot(userInput, game_board.zombies, game_board.player, game_board.kill.KillNumber);
+        if (userInput == 't' || userInput == 'g' || userInput == 'f' || userInput == 'h')
+        {
+            game_board.gun.shoot(userInput, game_board.zombies, game_board.player, game_board.kill_);
+        }
         if (count % 2 == 0)
         {
             for (int i = 0; i < 20; i++)
