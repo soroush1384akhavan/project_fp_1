@@ -72,7 +72,7 @@ public:
         {
             x = newX;
             y = newY;
-            Beep(523,500);
+            Beep(523,5);
         }
     }
 
@@ -188,7 +188,7 @@ public:
         }
     }
 };
-
+//meow
 class Gun
 {
 public:
@@ -216,8 +216,11 @@ public:
                         kill_.KillNumber++;
                         // cout << "Zombie hit! Zombie at (" << zombies[i].x << ", " << zombies[i].y << ") eliminated." << endl;
                         break;
+                        
                     }
+                    
                 }
+
             }
         }
 
