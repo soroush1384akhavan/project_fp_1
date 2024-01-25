@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/sorou/OneDrive/Desktop/project_fp_1",
-      "program": "c:/Users/sorou/OneDrive/Desktop/project_fp_1/build/Debug/outDebug",
+      "cwd": "c:/Users/sorou/OneDrive/Desktop/project_fp_1/sounds",
+      "program": "c:/Users/sorou/OneDrive/Desktop/project_fp_1/sounds/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

@@ -1,0 +1,10 @@
+Level: 2
+Vaccine: 0
+Credit: 0
+Round: 0
+Health: 3
+Ammo: 10/0
+Kill: 0
+Player Position: 5 8
+Zombie Position: 9 8
+Zombie Position: 5 8

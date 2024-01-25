@@ -1,7 +1,9 @@
 #include <iostream>
 #include <string>
 #include <cstdlib>
+#include <fstream>
 #include <ctime>
+#include <unistd.h>
 #include <windows.h>
 #include <mmsystem.h>
 #if defined _WIN32
@@ -72,7 +74,7 @@ public:
         {
             x = newX;
             y = newY;
-            Beep(523,5);
+            Beep(523, 5);
         }
     }
 
@@ -188,7 +190,7 @@ public:
         }
     }
 };
-//meow
+// meow
 class Gun
 {
 public:
@@ -210,17 +212,34 @@ public:
                 AmmoNumber--;
                 for (int i = 0; i < Level; i++)
                 {
-                    if (zombies[i].isActive && zombies[i].x == player.x && 0 <= player.y - zombies[i].y <= range)
+                    if (zombies[i].isActive && zombies[i].x == player.x && 0 <= (player.y - zombies[i].y) && (player.y - zombies[i].y) <= range)
                     {
                         zombies[i].isActive = false;
                         kill_.KillNumber++;
-                        // cout << "Zombie hit! Zombie at (" << zombies[i].x << ", " << zombies[i].y << ") eliminated." << endl;
                         break;
-                        
                     }
-                    
+                    else if (zombies[i].isActive && zombies[i].x == player.x)
+                    {
+                        cout << "\033[" << 10 << ";" << 25 << "H";
+                        cout << "Out of range";
+                        sleep(1);
+                        // پاک کردن پیام پس از تأخیر
+                        cout << "\033[" << 10 << ";" << 17 << "H";
+                        cout << "                          ";
+                        cout << "\033[" << 20 << ";" << 1 << "H";
+                        break;
+                    }
                 }
-
+            }
+            else
+            {
+                cout << "\033[" << 10 << ";" << 25 << "H";
+                cout << "Out of ammo!";
+                sleep(1);
+                // پاک کردن پیام پس از تأخیر
+                cout << "\033[" << 10 << ";" << 17 << "H";
+                cout << "                          ";
+                cout << "\033[" << 20 << ";" << 1 << "H";
             }
         }
 
@@ -231,18 +250,35 @@ public:
                 AmmoNumber--;
                 for (int i = 0; i < Level; i++)
                 {
-                    if (zombies[i].isActive && zombies[i].x == player.x && 0 <= zombies[i].y - player.y <= range)
+                    if (zombies[i].isActive && zombies[i].x == player.x && 0 <= zombies[i].y - player.y && zombies[i].y - player.y <= range)
                     {
                         zombies[i].isActive = false;
                         kill_.KillNumber++;
                         // cout << "Zombie hit! Zombie at (" << zombies[i].x << ", " << zombies[i].y << ") eliminated." << endl;
                         break;
                     }
+                    else if (zombies[i].isActive && zombies[i].x == player.x)
+                    {
+                        cout << "\033[" << 10 << ";" << 25 << "H";
+                        cout << "Out of range";
+                        sleep(1);
+                        // پاک کردن پیام پس از تأخیر
+                        cout << "\033[" << 10 << ";" << 17 << "H";
+                        cout << "                          ";
+                        cout << "\033[" << 20 << ";" << 1 << "H";
+                        break;
+                    }
                 }
             }
             else
             {
-                // cout << "Out of ammo!" << endl;
+                cout << "\033[" << 10 << ";" << 25 << "H";
+                cout << "Out of ammo!";
+                sleep(1);
+                // پاک کردن پیام پس از تأخیر
+                cout << "\033[" << 10 << ";" << 17 << "H";
+                cout << "                          ";
+                cout << "\033[" << 20 << ";" << 1 << "H";
             }
         }
 
@@ -253,18 +289,36 @@ public:
                 AmmoNumber--;
                 for (int i = 0; i < Level; i++)
                 {
-                    if (zombies[i].isActive && zombies[i].y == player.y && 0 <= zombies[i].x - player.x <= range)
+                    if (zombies[i].isActive && zombies[i].y == player.y && 0 <= zombies[i].x - player.x && zombies[i].x - player.x <= range)
                     {
                         zombies[i].isActive = false;
                         kill_.KillNumber++;
                         // cout << "Zombie hit! Zombie at (" << zombies[i].x << ", " << zombies[i].y << ") eliminated." << endl;
                         break;
                     }
+                    else if (zombies[i].isActive && zombies[i].y == player.y)
+                    {
+                        cout << "\033[" << 10 << ";" << 25 << "H";
+                        cout << "Out of range";
+                        sleep(1);
+                        // پاک کردن پیام پس از تأخیر
+                        cout << "\033[" << 10 << ";" << 17 << "H";
+                        cout << "                          ";
+                        cout << "\033[" << 20 << ";" << 1 << "H";
+                        break;
+                    }
                 }
             }
             else
             {
-                // cout << "Out of ammo!" << endl;
+
+                cout << "\033[" << 10 << ";" << 25 << "H";
+                cout << "Out of ammo!";
+                sleep(1);
+                // پاک کردن پیام پس از تأخیر
+                cout << "\033[" << 10 << ";" << 17 << "H";
+                cout << "                          ";
+                cout << "\033[" << 20 << ";" << 1 << "H";
             }
         }
 
@@ -275,18 +329,35 @@ public:
                 AmmoNumber--;
                 for (int i = 0; i < Level; i++)
                 {
-                    if (zombies[i].isActive && zombies[i].y == player.y && 0 <= player.x - zombies[i].x <= range)
+                    if (zombies[i].isActive && zombies[i].y == player.y && 0 <= player.x - zombies[i].x && player.x - zombies[i].x <= range)
                     {
                         zombies[i].isActive = false;
                         kill_.KillNumber++;
                         // cout << "Zombie hit! Zombie at (" << zombies[i].x << ", " << zombies[i].y << ") eliminated." << endl;
                         break;
                     }
+                    else if (zombies[i].isActive && zombies[i].y == player.y)
+                    {
+                        cout << "\033[" << 10 << ";" << 25 << "H";
+                        cout << "Out of range";
+                        sleep(1);
+                        // پاک کردن پیام پس از تأخیر
+                        cout << "\033[" << 10 << ";" << 17 << "H";
+                        cout << "                          ";
+                        cout << "\033[" << 20 << ";" << 1 << "H";
+                        break;
+                    }
                 }
             }
             else
             {
-                // cout << "Out of ammo!" << endl;
+                cout << "\033[" << 10 << ";" << 25 << "H";
+                cout << "Out of ammo!";
+                sleep(1);
+                // پاک کردن پیام پس از تأخیر
+                cout << "\033[" << 10 << ";" << 17 << "H";
+                cout << "                          ";
+                cout << "\033[" << 20 << ";" << 1 << "H";
             }
         }
     }
@@ -375,11 +446,10 @@ public:
 //     }
 // };
 
-
 class Game_Setting
 {
 public:
-    bool is_mute= true;
+    bool is_mute = true;
 
     void Setting()
     {
@@ -400,11 +470,11 @@ public:
 
         if (step == 'y')
         {
-            if(is_mute == true)
+            if (is_mute == true)
             {
                 is_mute = false;
-            } 
-            else if(is_mute == false)
+            }
+            else if (is_mute == false)
             {
                 is_mute = true;
             }
@@ -428,7 +498,7 @@ public:
 
 class sound
 {
-    bool play = PlaySound(TEXT("SOUND"), NULL, SND_ASYNC);
+    bool start = PlaySound(TEXT("/exit.wiv"), NULL, SND_ASYNC);
 };
 class Game_board
 {
@@ -621,6 +691,38 @@ void Header() // نمایش منوی اصلی بازی
     main.Options();
 }
 
+void save(Game_board &game_board)
+{
+    ofstream save("save_file.txt", ios::out);
+
+    // ذخیره اطلاعات بازی در فایل
+    save << "Level: " << game_board.level.levelNumber << endl;
+    save << "Vaccine: " << game_board.vaccine.VaccineNumber << endl;
+    save << "Credit: " << game_board.credit.CreditNumber << endl;
+    save << "Round: " << game_board.round.RoundNumber << endl;
+    save << "Health: " << game_board.health.HealthNumber << endl;
+    save << "Ammo: " << game_board.gun.AmmoNumber << "/" << game_board.gun.AmmoMagazine << endl;
+    save << "Kill: " << game_board.kill_.KillNumber << endl;
+
+    // ذخیره موقعیت بازیکن
+    save << "Player Position: " << game_board.player.x << " " << game_board.player.y << std::endl;
+
+    // ذخیره موقعیت زامبی‌ها
+    for (int i = 0; i < game_board.level.levelNumber; ++i)
+    {
+        save << "Zombie Position: " << game_board.zombies[i].x << " " << game_board.zombies[i].y << std::endl;
+    }
+    // بستن فایل
+    save.close();
+    cout << "\033[" << 10 << ";" << 25 << "H";
+    cout << "Game saved successfully.";
+    sleep(3);
+    // پاک کردن پیام پس از تأخیر
+    cout << "\033[" << 10 << ";" << 17 << "H";
+    cout << "                          ";
+    cout << "\033[" << 20 << ";" << 1 << "H";
+}
+
 int main()
 {
     int count = 0;
@@ -632,6 +734,11 @@ int main()
     while (!(lose()))
     {
         userInput = getUserInput(); // دریافت جهت حرکت
+        // save game;
+        if (userInput == '/')
+        {
+            save(game_board);
+        }
         if (userInput == 'w' || userInput == 'a' || userInput == 's' || userInput == 'd')
             game_board.player.move(userInput); // حرکت بازیکن بر اساس جهت حرکت
         // userInput_shoot = getUserInput_move_shoot(); // دریافت جهت تیر
@@ -644,6 +751,7 @@ int main()
         {
             game_board.gun.shoot(userInput, game_board.zombies, game_board.player, game_board.kill_, game_board.level.levelNumber);
         }
+
         if (count % 2 == 0)
         {
             for (int i = 0; i < 20; i++)
