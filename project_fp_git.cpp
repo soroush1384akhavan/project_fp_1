@@ -437,60 +437,6 @@ public:
     }
 };
 
-class Game_Setting
-{
-public:
-    bool is_mute = true;
-
-    void Setting()
-    {
-        Clear_scr();
-        cout << "final level is: 20" << endl;
-        if (is_mute)
-        {
-            cout << "Sound is not mute!" << endl;
-            cout << "Do you want to mute the sound?" << endl;
-        }
-        else if (!is_mute)
-        {
-            cout << "Sound is mute!" << endl;
-            cout << "Do you want to unmute the sound?" << endl;
-        }
-
-        char step = getUserInput_setting();
-
-        if (step == 'y')
-        {
-            if (is_mute == true)
-            {
-                is_mute = false;
-            }
-            else if (is_mute == false)
-            {
-                is_mute = true;
-            }
-
-            Setting();
-        }
-        else if (step == 'n')
-        {
-            Header();
-        }
-    }
-
-    char getUserInput_setting()
-    {
-        char sound;
-        sound = _getch();
-
-        return sound;
-    }
-};
-
-class sound
-{
-    bool start = PlaySound(TEXT("/exit.wiv"), NULL, SND_ASYNC);
-};
 class Game_board
 {
 public:
@@ -593,6 +539,62 @@ public:
     }
 };
 
+class Game_Setting
+{
+public:
+    bool is_mute = true;
+
+    void Setting()
+    {
+        Clear_scr();
+        cout << "final level is: 20" << endl;
+        if (is_mute)
+        {
+            cout << "Sound is not mute!" << endl;
+            cout << "Do you want to mute the sound?" << endl;
+        }
+        else if (!is_mute)
+        {
+            cout << "Sound is mute!" << endl;
+            cout << "Do you want to unmute the sound?" << endl;
+        }
+
+        char step = getUserInput_setting();
+
+        if (step == 'y')
+        {
+            if (is_mute == true)
+            {
+                is_mute = false;
+            }
+            else if (is_mute == false)
+            {
+                is_mute = true;
+            }
+
+            Setting();
+        }
+        else if (step == 'n')
+        {
+            //Header();
+        }
+    }
+
+    char getUserInput_setting()
+    {
+        char sound;
+        sound = _getch();
+
+        return sound;
+    }
+};
+
+class sound
+{
+    bool start = PlaySound(TEXT("/exit.wiv"), NULL, SND_ASYNC);
+};
+
+
 void load(Game_board &game_board)
 {
     ifstream saved("save_file.txt", ios::in);
@@ -660,9 +662,9 @@ public:
              << Reset;
         ;
     }
-    void Options()
+    void Options(Game_board &game_board)
     {
-        Game_board gameboard;
+        //Game_board gameboard;
         Game_Setting game_Setting;
 
         cout << "𝟙-𝕟𝕖𝕨 𝕘𝕒𝕞𝕖" << endl;
@@ -675,12 +677,12 @@ public:
 
         if (userInput == 1)
         {
-            gameboard.print_Game_board();
+            game_board.print_Game_board();
         }
         else if (userInput == 2)
         {
-           load(gameboard);
-           gameboard.print_Game_board();
+           load(game_board);
+           game_board.print_Game_board();
         }
         else if (userInput == 3)
         {
@@ -717,12 +719,12 @@ char getUserInput()
     return input;
 }
 
-void Header() // نمایش منوی اصلی بازی
+void Header(Game_board &game_board) // نمایش منوی اصلی بازی
 {
     MainMenu main;
     Clear_scr();
     main.printHeader();
-    main.Options();
+    main.Options(game_board);
 }
 
 void save(Game_board &game_board)
@@ -764,7 +766,7 @@ int main()
     int count = 0;
 
     Game_board game_board;
-    Header();
+    Header(game_board);
     char userInput;
 
     while (!(lose()))
