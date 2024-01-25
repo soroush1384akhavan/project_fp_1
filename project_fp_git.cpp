@@ -81,7 +81,7 @@ public:
 
     // void vaccineCheck(Vaccine vaccine)
     // {
-    //     if(x == vaccine.x && y == vaccine.y)
+    //     if (x == vaccine.x && y == vaccine.y)
     //     {
     //         vaccine.is_recive = true;
     //     }
@@ -418,40 +418,50 @@ public:
     }
 };
 
-class Vaccine
+class vaccine_Details
 {
 public:
-    int VaccineNumber, i=1;
-//     int x;
-//     int y;
-//     bool is_recive= false;
-    Vaccine(int number = 1) : VaccineNumber(number)
-    {
-    }
-
-//     void setRandomLOC(){
-//         if(i >0)
-//         {
-//             x = (rand() % 15) + 2;
-//             y = (rand() % 13) + 4;
-//             i--;
-//         }
-//     }
-
-//     void display()
-//     {
-//         if(!is_recive)
-//         {
-//             cout << "\033[" << y << ";" << x << "H"; // Set cursor position
-//             cout << "\033[36m";                      // ANSI escape code for red color
-//             cout << "V";
-//             cout << "\033[0m"; // Reset color to default
-//             cout << "\033[" << 20 << ";" << 1 << "H";
-//         }
-//     }    
+    int VaccineNumber = 0;
+    int x;
+    int y;
+    bool is_recive = false;
 };
 
-// ss
+class Vaccine : public vaccine_Details
+{
+public:
+    Vaccine()
+    {
+        setRandomCoordinates();
+    }
+    void setRandomCoordinates()
+    {
+        // تنظیم seed یک بار در ابتدای برنامه
+        static bool seedSet = false;
+        if (!seedSet)
+        {
+            srand(static_cast<unsigned>(time(0)));
+            seedSet = true;
+        }
+
+        // تولید مختصات تصادفی
+        x = rand() % (15) + 2;
+        y = rand() % (13) + 4;
+    }
+
+    void display()
+    {
+        if (!is_recive)
+        {
+            cout << "\033[" << y << ";" << x << "H"; // Set cursor position
+            cout << "\033[36m";                      // ANSI escape code for red color
+            cout << "V";
+            cout << "\033[0m"; // Reset color to default
+            cout << "\033[" << 20 << ";" << 1 << "H";
+        }
+    }
+};
+
 class Health
 {
 public:
@@ -474,7 +484,8 @@ class Game_board
 {
 public:
     Level level;
-    Vaccine vaccine;
+    Vaccine vaccine_Details;
+    Vaccine Vaccines[20];
     Credit credit;
     Round round;
     Health health;
@@ -487,7 +498,7 @@ public:
     void Details()
     {
         cout << "Level: " << level.levelNumber << " ";
-        cout << "Vaccine: " << vaccine.VaccineNumber << " ";
+        cout << "Vaccine: " << vaccine_Details.VaccineNumber << " ";
         cout << " Credit: " << credit.CreditNumber << " ";
         cout << "Round: " << round.RoundNumber << endl;
         cout << "Health: ";
@@ -560,10 +571,36 @@ public:
                 }
             }
         }
+
+        for (int i = 0; i < level.levelNumber; i++)
+        {
+            for (int j = 0; j < level.levelNumber; j++)
+            {
+                if (!is_same_position_V(Vaccines[i], Vaccines[j], i, j))
+                {
+                    Vaccines[i].display();
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
     }
     bool is_same_position(Zombie &zombie_1, Zombie &zombie_2, int index_1, int index_2)
     {
         if (zombie_1.x == zombie_2.x && zombie_1.y == zombie_2.y && index_1 != index_2)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    bool is_same_position_V(Vaccine &vaccine_1, Vaccine &vaccine_2, int index_1, int index_2)
+    {
+        if (vaccine_1.x == vaccine_2.x && vaccine_1.y == vaccine_2.y && index_1 != index_2)
         {
             return true;
         }
@@ -623,7 +660,7 @@ public:
         return sound;
     }
 };
-//mewo
+// mewo
 class sound
 {
     bool start = PlaySound(TEXT("/exit.wiv"), NULL, SND_ASYNC);
@@ -637,7 +674,7 @@ void load(Game_board &game_board)
     {
         // خواندن اطلاعات بازی از فایل
         saved >> game_board.level.levelNumber;
-        saved >> game_board.vaccine.VaccineNumber;
+        saved >> game_board.vaccine_Details.VaccineNumber;
         saved >> game_board.credit.CreditNumber;
         saved >> game_board.round.RoundNumber;
         saved >> game_board.health.HealthNumber;
@@ -746,7 +783,7 @@ bool lose()
 
 bool win(Game_board game_board)
 {
-    if (game_board.player.x == game_board.door.x && game_board.player.y == game_board.door.y )//&& game_board.vaccine.is_recive
+    if (game_board.player.x == game_board.door.x && game_board.player.y == game_board.door.y) //&& game_board.vaccine.is_recive
     {
         return true;
     }
@@ -773,7 +810,7 @@ void save(Game_board &game_board)
 
     // ذخیره اطلاعات بازی در فایل
     save << game_board.level.levelNumber << endl;                                    // level :
-    save << game_board.vaccine.VaccineNumber << endl;                                // VaccineNumber :
+    save << game_board.vaccine_Details.VaccineNumber << endl;                        // VaccineNumber :
     save << game_board.credit.CreditNumber << endl;                                  // CreditNumber :
     save << game_board.round.RoundNumber << endl;                                    // RoundNumber :
     save << game_board.health.HealthNumber << endl;                                  // HealthNumber :
@@ -822,7 +859,7 @@ int main()
         }
         if (userInput == 'w' || userInput == 'a' || userInput == 's' || userInput == 'd')
             game_board.player.move(userInput); // حرکت بازیکن بر اساس جهت حرکت
-            // game_board.player.vaccineCheck(game_board.vaccine); // چک کردن دریافت واکسن
+        // game_board.player.vaccineCheck(game_board.vaccine); // چک کردن دریافت واکسن
         // userInput_shoot = getUserInput_move_shoot(); // دریافت جهت تیر
         // game_board.gun.shoot(userInput_shoot, game_board.zombies, game_board.player);
         // if (userInput == 'T' || userInput == 't')
