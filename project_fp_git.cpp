@@ -436,16 +436,6 @@ public:
     }
 };
 
-// class Ammo
-// {
-// public:
-//     int AmmoNumber;
-//     int AmmoMagazine;
-//     Ammo(int numberAmmo = 3, int numberMagazine = 0) : AmmoNumber(numberAmmo), AmmoMagazine(numberMagazine)
-//     {
-//     }
-// };
-
 class Game_Setting
 {
 public:
@@ -703,7 +693,7 @@ void save(Game_board &game_board)
     save << "Health: " << game_board.health.HealthNumber << endl;
     save << "Ammo: " << game_board.gun.AmmoNumber << "/" << game_board.gun.AmmoMagazine << endl;
     save << "Kill: " << game_board.kill_.KillNumber << endl;
-
+    save << "range: " << game_board.gun.range << endl;
     // ذخیره موقعیت بازیکن
     save << "Player Position: " << game_board.player.x << " " << game_board.player.y << std::endl;
 
@@ -726,11 +716,11 @@ void save(Game_board &game_board)
 int main()
 {
     int count = 0;
-    // MainMenu menu;
+
     Game_board game_board;
     Header();
-    char userInput; // تغییر اینجا به char
-    // char userInput_shoot;
+    char userInput;
+
     while (!(lose()))
     {
         userInput = getUserInput(); // دریافت جهت حرکت
