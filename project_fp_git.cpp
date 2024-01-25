@@ -87,6 +87,13 @@ public:
     //     }
     // }
 
+    // void ammoChack(Ammo_Box ammoBox)
+    // {
+    //     if(x == ammoBox.x && y == ammoBox.y){
+    //         ammoBox.isRecive = true;
+    //     }
+    // }
+
     void display()
     {
         // Set cursor position, change text color to green, and display 'P'
@@ -451,7 +458,33 @@ public:
 //     }    
 };
 
-// ss
+// class Ammo_Box
+// {
+//     int x,y;
+//     int i=1;
+//     bool isRecive = false;
+
+//     void setRandomCoordinates(){
+//         if(i >0)
+//         {
+//             x = (rand() % 15) + 2;
+//             y = (rand() % 13) + 4;
+//             i--;
+//         }
+//     }
+
+//     void display()
+//     {
+//         if(!isRecive){
+//             cout << "\033[" << y << ";" << x << "H"; // Set cursor position
+//             cout << "\033[36m";                      // ANSI escape code for red color
+//             cout << "A";
+//             cout << "\033[0m"; // Reset color to default
+//             cout << "\033[" << 20 << ";" << 1 << "H";
+//         }
+//     }
+// };
+
 class Health
 {
 public:
@@ -478,7 +511,7 @@ public:
     Credit credit;
     Round round;
     Health health;
-    // Ammo ammo;
+    // Ammo_Box ammo;
     Kill kill_;
     Player player;
     Zombie zombies[20];
