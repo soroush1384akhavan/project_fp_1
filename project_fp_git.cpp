@@ -16,6 +16,7 @@
 using namespace std;
 
 void Header();
+//void load(Game_board);
 
 void Clear_scr()
 {
@@ -592,6 +593,43 @@ public:
     }
 };
 
+void load(Game_board &game_board)
+{
+    ifstream saved("save_file.txt", ios::in);
+
+    if (saved.is_open())
+    {
+        // خواندن اطلاعات بازی از فایل
+        saved >> game_board.level.levelNumber;
+        saved >> game_board.vaccine.VaccineNumber;
+        saved >> game_board.credit.CreditNumber;
+        saved >> game_board.round.RoundNumber;
+        saved >> game_board.health.HealthNumber;
+        saved >> game_board.gun.AmmoNumber;
+        saved.ignore(); // تخطی از کاراکتر جدا کننده رشته
+        saved >> game_board.gun.AmmoMagazine;
+        saved >> game_board.kill_.KillNumber;
+        saved >> game_board.gun.range;
+
+        // خواندن موقعیت بازیکن
+        saved >> game_board.player.x >> game_board.player.y;
+
+        // خواندن موقعیت زامبی‌ها
+        for (int i = 0; i < game_board.level.levelNumber; ++i)
+        {
+            saved >> game_board.zombies[i].x >> game_board.zombies[i].y;
+        }
+
+        saved.close();
+        cout << "\033[" << 10 << ";" << 25 << "H";
+        cout << "Game loaded successfully.";
+        sleep(3);
+        // پاک کردن پیام پس از تأخیر
+    }
+}
+
+
+
 class MainMenu
 {
 public:
@@ -628,7 +666,8 @@ public:
         Game_Setting game_Setting;
 
         cout << "𝟙-𝕟𝕖𝕨 𝕘𝕒𝕞𝕖" << endl;
-        cout << "𝟚-𝕊𝕖𝕥𝕥𝕚𝕟𝕘𝕤" << endl;
+        cout << "𝟚-𝕣𝕖𝕤𝕦𝕞𝕖" << endl;
+        cout << "𝟛-𝕊𝕖𝕥𝕥𝕚𝕟𝕘𝕤" << endl;
         cout << "𝟛-ℂ𝕣𝕖𝕕𝕚𝕥𝕤" << endl;
         cout << "𝟜-ℍ𝕖𝕝𝕡" << endl;
         cout << "𝟝-𝔼𝕩𝕚𝕥" << endl;
@@ -639,6 +678,11 @@ public:
             gameboard.print_Game_board();
         }
         else if (userInput == 2)
+        {
+           load(gameboard);
+           gameboard.print_Game_board();
+        }
+        else if (userInput == 3)
         {
             game_Setting.Setting();
         }
@@ -686,21 +730,21 @@ void save(Game_board &game_board)
     ofstream save("save_file.txt", ios::out);
 
     // ذخیره اطلاعات بازی در فایل
-    save << "Level: " << game_board.level.levelNumber << endl;
-    save << "Vaccine: " << game_board.vaccine.VaccineNumber << endl;
-    save << "Credit: " << game_board.credit.CreditNumber << endl;
-    save << "Round: " << game_board.round.RoundNumber << endl;
-    save << "Health: " << game_board.health.HealthNumber << endl;
-    save << "Ammo: " << game_board.gun.AmmoNumber << "/" << game_board.gun.AmmoMagazine << endl;
-    save << "Kill: " << game_board.kill_.KillNumber << endl;
-    save << "range: " << game_board.gun.range << endl;
+    save << game_board.level.levelNumber << endl;                                    // level :
+    save << game_board.vaccine.VaccineNumber << endl;                                // VaccineNumber :
+    save << game_board.credit.CreditNumber << endl;                                  // CreditNumber :
+    save << game_board.round.RoundNumber << endl;                                    // RoundNumber :
+    save << game_board.health.HealthNumber << endl;                                  // HealthNumber :
+    save << game_board.gun.AmmoNumber << "/" << game_board.gun.AmmoMagazine << endl; // AmmoNumber & AmmoMagazine :
+    save << game_board.kill_.KillNumber << endl;                                     // KillNumber :
+    save << game_board.gun.range << endl;                                            // range :
     // ذخیره موقعیت بازیکن
-    save << "Player Position: " << game_board.player.x << " " << game_board.player.y << std::endl;
+    save << game_board.player.x << " " << game_board.player.y << std::endl;
 
     // ذخیره موقعیت زامبی‌ها
     for (int i = 0; i < game_board.level.levelNumber; ++i)
     {
-        save << "Zombie Position: " << game_board.zombies[i].x << " " << game_board.zombies[i].y << std::endl;
+        save << game_board.zombies[i].x << " " << game_board.zombies[i].y << std::endl;
     }
     // بستن فایل
     save.close();
@@ -712,6 +756,8 @@ void save(Game_board &game_board)
     cout << "                          ";
     cout << "\033[" << 20 << ";" << 1 << "H";
 }
+
+
 
 int main()
 {
