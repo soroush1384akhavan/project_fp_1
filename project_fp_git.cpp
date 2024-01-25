@@ -396,9 +396,10 @@ class Vaccine
 {
 public:
     int VaccineNumber;
-    Vaccine(int number = 0) : VaccineNumber(number)
+    Vaccine(int number = 1) : VaccineNumber(number)
     {
     }
+    
 };
 
 class Credit
