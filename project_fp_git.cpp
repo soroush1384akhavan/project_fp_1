@@ -79,6 +79,14 @@ public:
         }
     }
 
+    // void vaccineCheck(Vaccine vaccine)
+    // {
+    //     if(x == vaccine.x && y == vaccine.y)
+    //     {
+    //         vaccine.is_recive = true;
+    //     }
+    // }
+
     void display()
     {
         // Set cursor position, change text color to green, and display 'P'
@@ -392,15 +400,6 @@ public:
     }
 };
 
-class Vaccine
-{
-public:
-    int VaccineNumber;
-    Vaccine(int number = 1) : VaccineNumber(number)
-    {
-    }
-    
-};
 
 class Credit
 {
@@ -420,6 +419,38 @@ public:
     }
 };
 
+class Vaccine
+{
+public:
+    int VaccineNumber, i=1;
+//     int x;
+//     int y;
+//     bool is_recive= false;
+    Vaccine(int number = 1) : VaccineNumber(number)
+    {
+    }
+
+//     void setRandomLOC(){
+//         if(i >0)
+//         {
+//             x = (rand() % 15) + 2;
+//             y = (rand() % 13) + 4;
+//             i--;
+//         }
+//     }
+
+//     void display()
+//     {
+//         if(!is_recive)
+//         {
+//             cout << "\033[" << y << ";" << x << "H"; // Set cursor position
+//             cout << "\033[36m";                      // ANSI escape code for red color
+//             cout << "V";
+//             cout << "\033[0m"; // Reset color to default
+//             cout << "\033[" << 20 << ";" << 1 << "H";
+//         }
+//     }    
+};
 class Health
 {
 public:
@@ -510,6 +541,8 @@ public:
         // Use the member variable player instead of creating a local Player object
         player.display();
         door.display();
+        // vaccine.setRandomLOC();
+        // vaccine.display();
 
         for (int i = 0; i < level.levelNumber; i++)
         {
@@ -707,7 +740,7 @@ bool lose()
 
 bool win(Game_board game_board)
 {
-    if (game_board.player.x == game_board.door.x && game_board.player.y == game_board.door.y)
+    if (game_board.player.x == game_board.door.x && game_board.player.y == game_board.door.y )//&& game_board.vaccine.is_recive
     {
         return true;
     }
@@ -780,6 +813,7 @@ int main()
         }
         if (userInput == 'w' || userInput == 'a' || userInput == 's' || userInput == 'd')
             game_board.player.move(userInput); // حرکت بازیکن بر اساس جهت حرکت
+            // game_board.player.vaccineCheck(game_board.vaccine); // چک کردن دریافت واکسن
         // userInput_shoot = getUserInput_move_shoot(); // دریافت جهت تیر
         // game_board.gun.shoot(userInput_shoot, game_board.zombies, game_board.player);
         // if (userInput == 'T' || userInput == 't')
