@@ -16,7 +16,7 @@
 using namespace std;
 
 void Header();
-//void load(Game_board);
+// void load(Game_board);
 
 void Clear_scr()
 {
@@ -400,7 +400,6 @@ public:
     }
 };
 
-
 class Credit
 {
 public:
@@ -451,6 +450,8 @@ public:
 //         }
 //     }    
 };
+
+// ss
 class Health
 {
 public:
@@ -610,7 +611,7 @@ public:
         }
         else if (step == 'n')
         {
-            //Header();
+            // Header();
         }
     }
 
@@ -627,7 +628,6 @@ class sound
 {
     bool start = PlaySound(TEXT("/exit.wiv"), NULL, SND_ASYNC);
 };
-
 
 void load(Game_board &game_board)
 {
@@ -653,18 +653,24 @@ void load(Game_board &game_board)
         // خواندن موقعیت زامبی‌ها
         for (int i = 0; i < game_board.level.levelNumber; ++i)
         {
-            saved >> game_board.zombies[i].x >> game_board.zombies[i].y;
+            saved >> game_board.zombies[i].isActive; // خواندن وضعیت فعال بودن
+            if (game_board.zombies[i].isActive)
+            {
+                saved >> game_board.zombies[i].x >> game_board.zombies[i].y;
+            }
+            else
+            {
+                saved.ignore();
+            }
         }
 
         saved.close();
         cout << "\033[" << 10 << ";" << 25 << "H";
-        cout << "Game loaded successfully.";
+        cout << "Game loading...";
         sleep(3);
         // پاک کردن پیام پس از تأخیر
     }
 }
-
-
 
 class MainMenu
 {
@@ -698,15 +704,15 @@ public:
     }
     void Options(Game_board &game_board)
     {
-        //Game_board gameboard;
+        // Game_board gameboard;
         Game_Setting game_Setting;
 
         cout << "𝟙-𝕟𝕖𝕨 𝕘𝕒𝕞𝕖" << endl;
         cout << "𝟚-𝕣𝕖𝕤𝕦𝕞𝕖" << endl;
         cout << "𝟛-𝕊𝕖𝕥𝕥𝕚𝕟𝕘𝕤" << endl;
-        cout << "𝟛-ℂ𝕣𝕖𝕕𝕚𝕥𝕤" << endl;
-        cout << "𝟜-ℍ𝕖𝕝𝕡" << endl;
-        cout << "𝟝-𝔼𝕩𝕚𝕥" << endl;
+        cout << "𝟜-ℂ𝕣𝕖𝕕𝕚𝕥𝕤" << endl;
+        cout << "𝟝-ℍ𝕖𝕝𝕡" << endl;
+        cout << "𝟞-𝔼𝕩𝕚𝕥" << endl;
         int userInput = getUserInput();
 
         if (userInput == 1)
@@ -715,8 +721,8 @@ public:
         }
         else if (userInput == 2)
         {
-           load(game_board);
-           game_board.print_Game_board();
+            load(game_board);
+            game_board.print_Game_board();
         }
         else if (userInput == 3)
         {
@@ -775,25 +781,28 @@ void save(Game_board &game_board)
     save << game_board.kill_.KillNumber << endl;                                     // KillNumber :
     save << game_board.gun.range << endl;                                            // range :
     // ذخیره موقعیت بازیکن
-    save << game_board.player.x << " " << game_board.player.y << std::endl;
+    save << game_board.player.x << " " << game_board.player.y << endl;
 
     // ذخیره موقعیت زامبی‌ها
     for (int i = 0; i < game_board.level.levelNumber; ++i)
     {
-        save << game_board.zombies[i].x << " " << game_board.zombies[i].y << std::endl;
+        save << game_board.zombies[i].isActive << endl;
+        if (game_board.zombies[i].isActive)
+        {
+            save << game_board.zombies[i].x << " " << game_board.zombies[i].y << endl;
+        }
     }
+
     // بستن فایل
     save.close();
     cout << "\033[" << 10 << ";" << 25 << "H";
-    cout << "Game saved successfully.";
+    cout << "Game saving...";
     sleep(3);
     // پاک کردن پیام پس از تأخیر
     cout << "\033[" << 10 << ";" << 17 << "H";
     cout << "                          ";
     cout << "\033[" << 20 << ";" << 1 << "H";
 }
-
-
 
 int main()
 {
