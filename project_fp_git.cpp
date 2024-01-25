@@ -623,7 +623,7 @@ public:
         return sound;
     }
 };
-
+//mewo
 class sound
 {
     bool start = PlaySound(TEXT("/exit.wiv"), NULL, SND_ASYNC);
