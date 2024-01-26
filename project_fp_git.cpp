@@ -79,11 +79,14 @@ public:
         }
     }
 
-    // void vaccineCheck(Vaccine vaccine)
+    // void vaccineCheck(Vaccine *Vaccines, int level)
     // {
-    //     if (x == vaccine.x && y == vaccine.y)
+    //     for(int i=0; i< level; i++)
     //     {
-    //         vaccine.is_recive = true;
+    //         if (x == Vaccines[i].x && y == Vaccines[i].y)
+    //         {
+    //             Vaccines[i].is_recive = true;
+    //         }
     //     }
     // }
 
@@ -212,11 +215,12 @@ class Gun
 public:
     int AmmoNumber;
     int AmmoMagazine;
+    int MagazineSize;
     int range;
     Gun()
     {
-        AmmoNumber = 10;
-        AmmoMagazine = 0;
+        AmmoNumber = 3;
+        AmmoMagazine = 10;
         range = 3;
     }
     void shoot(char direction, Zombie *zombies, Player &player, Kill &kill_, int Level)
@@ -226,6 +230,7 @@ public:
             if (AmmoNumber > 0)
             {
                 AmmoNumber--;
+                // fireSound();
                 for (int i = 0; i < Level; i++)
                 {
                     if (zombies[i].isActive && zombies[i].x == player.x && 0 <= (player.y - zombies[i].y) && (player.y - zombies[i].y) <= range)
@@ -237,7 +242,7 @@ public:
                     else if (zombies[i].isActive && zombies[i].x == player.x)
                     {
                         cout << "\033[" << 10 << ";" << 25 << "H";
-                        cout << "Out of range";
+                        cout << "Zombie is not in range! come closer.";
                         sleep(1);
                         // پاک کردن پیام پس از تأخیر
                         cout << "\033[" << 10 << ";" << 17 << "H";
@@ -250,7 +255,7 @@ public:
             else
             {
                 cout << "\033[" << 10 << ";" << 25 << "H";
-                cout << "Out of ammo!";
+                cout << "No charged ammo!";
                 sleep(1);
                 // پاک کردن پیام پس از تأخیر
                 cout << "\033[" << 10 << ";" << 17 << "H";
@@ -264,6 +269,7 @@ public:
             if (AmmoNumber > 0)
             {
                 AmmoNumber--;
+                // fireSound();
                 for (int i = 0; i < Level; i++)
                 {
                     if (zombies[i].isActive && zombies[i].x == player.x && 0 <= zombies[i].y - player.y && zombies[i].y - player.y <= range)
@@ -276,7 +282,7 @@ public:
                     else if (zombies[i].isActive && zombies[i].x == player.x)
                     {
                         cout << "\033[" << 10 << ";" << 25 << "H";
-                        cout << "Out of range";
+                        cout << "Zombie is not in range! come closer.";
                         sleep(1);
                         // پاک کردن پیام پس از تأخیر
                         cout << "\033[" << 10 << ";" << 17 << "H";
@@ -289,7 +295,7 @@ public:
             else
             {
                 cout << "\033[" << 10 << ";" << 25 << "H";
-                cout << "Out of ammo!";
+                cout << "No charged ammo!";
                 sleep(1);
                 // پاک کردن پیام پس از تأخیر
                 cout << "\033[" << 10 << ";" << 17 << "H";
@@ -303,6 +309,7 @@ public:
             if (AmmoNumber > 0)
             {
                 AmmoNumber--;
+                // fireSound();
                 for (int i = 0; i < Level; i++)
                 {
                     if (zombies[i].isActive && zombies[i].y == player.y && 0 <= zombies[i].x - player.x && zombies[i].x - player.x <= range)
@@ -315,7 +322,7 @@ public:
                     else if (zombies[i].isActive && zombies[i].y == player.y)
                     {
                         cout << "\033[" << 10 << ";" << 25 << "H";
-                        cout << "Out of range";
+                        cout << "Zombie is not in range! come closer.";
                         sleep(1);
                         // پاک کردن پیام پس از تأخیر
                         cout << "\033[" << 10 << ";" << 17 << "H";
@@ -329,7 +336,7 @@ public:
             {
 
                 cout << "\033[" << 10 << ";" << 25 << "H";
-                cout << "Out of ammo!";
+                cout << "No charged ammo!";
                 sleep(1);
                 // پاک کردن پیام پس از تأخیر
                 cout << "\033[" << 10 << ";" << 17 << "H";
@@ -343,6 +350,7 @@ public:
             if (AmmoNumber > 0)
             {
                 AmmoNumber--;
+                // fireSound();
                 for (int i = 0; i < Level; i++)
                 {
                     if (zombies[i].isActive && zombies[i].y == player.y && 0 <= player.x - zombies[i].x && player.x - zombies[i].x <= range)
@@ -355,7 +363,7 @@ public:
                     else if (zombies[i].isActive && zombies[i].y == player.y)
                     {
                         cout << "\033[" << 10 << ";" << 25 << "H";
-                        cout << "Out of range";
+                        cout << "Zombie is not in range! come closer.";
                         sleep(1);
                         // پاک کردن پیام پس از تأخیر
                         cout << "\033[" << 10 << ";" << 17 << "H";
@@ -368,7 +376,58 @@ public:
             else
             {
                 cout << "\033[" << 10 << ";" << 25 << "H";
-                cout << "Out of ammo!";
+                cout << "No charged ammo!";
+                sleep(1);
+                // پاک کردن پیام پس از تأخیر
+                cout << "\033[" << 10 << ";" << 17 << "H";
+                cout << "                          ";
+                cout << "\033[" << 20 << ";" << 1 << "H";
+            }
+        }
+    }
+    void reload(char direction){
+        int freeMag = 3 - AmmoNumber;
+
+        if (direction == 'r' || direction == 'R')
+        {
+            if(AmmoMagazine >=3 && AmmoNumber ==0){
+                AmmoNumber += 3;
+                AmmoMagazine -= 3;
+
+                cout << "\033[" << 10 << ";" << 25 << "H";
+                cout << "Reloaded!";
+                sleep(1);
+                // پاک کردن پیام پس از تأخیر
+                cout << "\033[" << 10 << ";" << 17 << "H";
+                cout << "                          ";
+                cout << "\033[" << 20 << ";" << 1 << "H";
+            }
+            else if(AmmoMagazine > 3 && AmmoNumber >0 && AmmoNumber < 3){
+                AmmoMagazine = AmmoMagazine - freeMag;
+                AmmoNumber =3;
+                
+                cout << "\033[" << 10 << ";" << 25 << "H";
+                cout << "Reloaded!";
+                sleep(1);
+                // پاک کردن پیام پس از تأخیر
+                cout << "\033[" << 10 << ";" << 17 << "H";
+                cout << "                          ";
+                cout << "\033[" << 20 << ";" << 1 << "H";
+            }
+            else if(AmmoNumber == 3){
+                
+                cout << "\033[" << 10 << ";" << 25 << "H";
+                cout << "The gun is already Charged";
+                sleep(1);
+                // پاک کردن پیام پس از تأخیر
+                cout << "\033[" << 10 << ";" << 17 << "H";
+                cout << "                          ";
+                cout << "\033[" << 20 << ";" << 1 << "H";
+            }
+            else if(AmmoMagazine == 0){
+                
+                cout << "\033[" << 10 << ";" << 25 << "H";
+                cout << "No Ammo!";
                 sleep(1);
                 // پاک کردن پیام پس از تأخیر
                 cout << "\033[" << 10 << ";" << 17 << "H";
@@ -402,7 +461,7 @@ class Level
 {
 public:
     int levelNumber;
-    Level(int number = 2) : levelNumber(number)
+    Level(int number = 1) : levelNumber(number)
     {
     }
 };
@@ -461,7 +520,7 @@ public:
         if (!is_recive)
         {
             cout << "\033[" << y << ";" << x << "H"; // Set cursor position
-            cout << "\033[36m";                      // ANSI escape code for red color
+            cout << "\033[30m";                      // ANSI escape code for red color
             cout << "V";
             cout << "\033[0m"; // Reset color to default
             cout << "\033[" << 20 << ";" << 1 << "H";
@@ -469,32 +528,47 @@ public:
     }
 };
 
-// class Ammo_Box
-// {
-//     int x,y;
-//     int i=1;
-//     bool isRecive = false;
+class ammoBox_Details
+{
+public:
+    int AmmoBoxNumber= 0;
+    int x;
+    int y;
+    bool isRecive = false;
+};
 
-//     void setRandomCoordinates(){
-//         if(i >0)
-//         {
-//             x = (rand() % 15) + 2;
-//             y = (rand() % 13) + 4;
-//             i--;
-//         }
-//     }
+class Ammo_Box : public ammoBox_Details
+{
+    Ammo_Box()
+    {
+        setRandomCoordinates();
+    }
+    void setRandomCoordinates()
+    {
+        // تنظیم seed یک بار در ابتدای برنامه
+        static bool seedSet = false;
+        if (!seedSet)
+        {
+            srand(static_cast<unsigned>(time(0)));
+            seedSet = true;
+        }
 
-//     void display()
-//     {
-//         if(!isRecive){
-//             cout << "\033[" << y << ";" << x << "H"; // Set cursor position
-//             cout << "\033[36m";                      // ANSI escape code for red color
-//             cout << "A";
-//             cout << "\033[0m"; // Reset color to default
-//             cout << "\033[" << 20 << ";" << 1 << "H";
-//         }
-//     }
-// };
+        // تولید مختصات تصادفی
+        x = rand() % (15) + 2;
+        y = rand() % (13) + 4;
+    }
+
+    void display()
+    {
+        if(!isRecive){
+            cout << "\033[" << y << ";" << x << "H"; // Set cursor position
+            cout << "\033[36m";                      // ANSI escape code for red color
+            cout << "A";
+            cout << "\033[0m"; // Reset color to default
+            cout << "\033[" << 20 << ";" << 1 << "H";
+        }
+    }
+};
 
 
 class Health
@@ -524,7 +598,8 @@ public:
     Credit credit;
     Round round;
     Health health;
-    // Ammo_Box ammo;
+    // Ammo_Box ammo_Details;
+    // Ammo_Box Ammo_Boxes[20];
     Kill kill_;
     Player player;
     Zombie zombies[20];
@@ -588,8 +663,6 @@ public:
         // Use the member variable player instead of creating a local Player object
         player.display();
         door.display();
-        // vaccine.setRandomLOC();
-        // vaccine.display();
 
         for (int i = 0; i < level.levelNumber; i++)
         {
@@ -621,6 +694,20 @@ public:
                 }
             }
         }
+        // for (int i = 0; i < level.levelNumber/2 ; i++)
+        // {
+        //     for (int j = 0; j < level.levelNumber/2 ; j++)
+        //     {
+        //         if (!is_same_position_A(Ammo_Boxes[i],Ammo_Boxes[j], i, j))
+        //         {
+        //             Ammo_Boxes[i].display();
+        //         }
+        //         else
+        //         {
+        //             break;
+        //         }
+        //     }
+        // }
     }
     bool is_same_position(Zombie &zombie_1, Zombie &zombie_2, int index_1, int index_2)
     {
@@ -644,6 +731,17 @@ public:
             return false;
         }
     }
+    // bool is_same_position_A(Ammo_Box &ammo_box_1, Ammo_Box &ammo_box_2, int index_1, int index_2)
+    // {
+    //     if (ammo_box_1.x == ammo_box_2.x && ammo_box_1.y == ammo_box_2.y && index_1 != index_2)
+    //     {
+    //         return true;
+    //     }
+    //     else
+    //     {
+    //         return false;
+    //     }
+    // }
 };
 
 class Game_Setting
@@ -695,11 +793,25 @@ public:
         return sound;
     }
 };
-// mewo
-class sound
-{
-    bool start = PlaySound(TEXT("/exit.wiv"), NULL, SND_ASYNC);
-};
+
+// game sounds
+// void startSound()
+// {
+//     PlaySound(TEXT("exit.wiv"), NULL, SND_ASYNC);
+// }
+// void fireSound()
+// {
+//     PlaySound(TEXT("bomb_explosion.wiv"), NULL, SND_ASYNC);
+// }
+// void winSound()
+// {
+//     PlaySound(TEXT("round_end.wiv"), NULL, SND_ASYNC);
+// }
+// void loseSound()
+// {
+//     PlaySound(TEXT("death.wiv"), NULL, SND_ASYNC);
+// }
+
 
 void load(Game_board &game_board)
 {
@@ -790,6 +902,7 @@ public:
         if (userInput == 1)
         {
             game_board.print_Game_board();
+            // startSound();
         }
         else if (userInput == 2)
         {
@@ -818,7 +931,7 @@ bool lose()
 
 bool win(Game_board game_board)
 {
-    if (game_board.player.x == game_board.door.x && game_board.player.y == game_board.door.y) //&& game_board.vaccine.is_recive
+    if (game_board.player.x == game_board.door.x && game_board.player.y == game_board.door.y)// && game_board.vaccine_Details.is_recive)
     {
         return true;
     }
@@ -894,7 +1007,7 @@ int main()
         }
         if (userInput == 'w' || userInput == 'a' || userInput == 's' || userInput == 'd')
             game_board.player.move(userInput); // حرکت بازیکن بر اساس جهت حرکت
-        // game_board.player.vaccineCheck(game_board.vaccine); // چک کردن دریافت واکسن
+            // game_board.player.vaccineCheck(game_board.vaccine_Details); // چک کردن دریافت واکسن
         // userInput_shoot = getUserInput_move_shoot(); // دریافت جهت تیر
         // game_board.gun.shoot(userInput_shoot, game_board.zombies, game_board.player);
         // if (userInput == 'T' || userInput == 't')
@@ -904,6 +1017,10 @@ int main()
         if (userInput == 't' || userInput == 'g' || userInput == 'f' || userInput == 'h')
         {
             game_board.gun.shoot(userInput, game_board.zombies, game_board.player, game_board.kill_, game_board.level.levelNumber);
+        }
+        if (userInput == 'r' || userInput == 'R')
+        {
+            game_board.gun.reload(userInput);
         }
 
         if (count % 2 == 0)
@@ -925,7 +1042,9 @@ int main()
             Clear_scr();
             game_board.Reset_position();
             game_board.print_Game_board();
+            // winSound();
         }
     }
+    // loseSound();
     return 0;
 }
