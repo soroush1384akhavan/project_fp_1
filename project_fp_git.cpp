@@ -258,7 +258,7 @@ public:
     {
         for (int i = 0; i < level; i++)
         {
-            if (x == vaccines[i].x && y == vaccines[i].y)
+            if (x == vaccines[i].x && y == vaccines[i].y && !vaccines[i].is_recive)
             {
                 vaccine_Details.VaccineNumber++;
                 vaccines[i].is_recive = true;
@@ -282,7 +282,7 @@ public:
     {
         for (int i = 0; i < level; i++)
         {
-            if (x == ammo_Boxes[i].x && y == ammo_Boxes[i].y)
+            if (x == ammo_Boxes[i].x && y == ammo_Boxes[i].y && !ammo_Boxes[i].isRecive)
             {
                 ammo_Boxes[i].isRecive = true;
                 AmmoNumber++;
@@ -738,6 +738,7 @@ public:
         {
             zombies[i].setRandomCoordinates();
             Vaccines[i].setRandomCoordinates();
+            ammo_Boxes[i].setRandomCoordinates();
             for (int j = 0; j < i; j++)
             {
                 while (is_same_position(zombies[i], zombies[j], i, j))
@@ -1170,6 +1171,7 @@ int main()
             {
                 game_board.zombies[i].isActive = true;
                 game_board.Vaccines[i].is_recive = false;
+                game_board.ammo_Boxes[i].isRecive = false;
             }
 
             game_board.level.levelNumber++;
