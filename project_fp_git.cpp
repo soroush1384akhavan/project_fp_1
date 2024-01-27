@@ -249,7 +249,7 @@ public:
         {
             x = newX;
             y = newY;
-            Beep(523, 5);
+            // Beep(523, 5);
         }
     }
 
@@ -266,11 +266,11 @@ public:
         }
     }
 
-    void ammoBoxCheck(Ammo_Box *ammo_Boxes, int level,ammoBox_Details &ammoBox_Details, Gun &gun)
+    void ammoBoxCheck(Ammo_Box *ammo_Boxes, int level,ammoBox_Details &ammoBox_Details)
     {
-        for (int i=0; i < level; i++)
+        for (int i = 0; i < level; i++)
         {
-            if(x == ammo_Boxes[i].x && y == ammo_Boxes[i].y)
+            if (x == ammo_Boxes[i].x && y == ammo_Boxes[i].y)
             {
                 ammo_Boxes[i].isRecive = true;
                 ammoBox_Details.AmmoBoxNumber++;
@@ -389,6 +389,14 @@ public:
         else if (y > 18)
         {
             y = 18;
+        }
+    }
+
+    void ZombiesCeck(Player &player, int level, int &health)
+    {
+        if (abs(x - player.x) <= 1 && abs(y - player.y) <= 1)
+        {
+            health--;
         }
     }
 };
@@ -1021,8 +1029,12 @@ public:
     }
 };
 
-bool lose()
+bool lose(Game_board &game_board)
 {
+    if (game_board.health.HealthNumber == 0)
+    {
+        return true;
+    }
     return false;
 }
 
@@ -1101,7 +1113,7 @@ int main()
     Header(game_board);
     char userInput;
 
-    while (!(lose()))
+    while (!(lose(game_board)))
     {
         userInput = getUserInput(); // دریافت جهت حرکت
         // save game;
@@ -1112,8 +1124,8 @@ int main()
         if (userInput == 'w' || userInput == 'a' || userInput == 's' || userInput == 'd')
         {
             game_board.player.move(userInput); // حرکت بازیکن بر اساس جهت حرکت
-            game_board.player.vaccineCheck(game_board.Vaccines, game_board.level.levelNumber, game_board.vaccine_Details); // چک کردن دریافت واکسن 
-            game_board.player.ammoBoxCheck(game_board.ammo_Boxes, game_board.level.levelNumber, game_board.ammo_Details, game_board.gun); // جک کردن دریافت مهمات
+            game_board.player.vaccineCheck(game_board.Vaccines, game_board.level.levelNumber, game_board.vaccine_Details);
+            game_board.player.ammoBoxCheck(game_board.ammo_Boxes, game_board.level.levelNumber, game_board.ammo_Details);
         }
         // userInput_shoot = getUserInput_move_shoot(); // دریافت جهت تیر
         // game_board.gun.shoot(userInput_shoot, game_board.zombies, game_board.player);
