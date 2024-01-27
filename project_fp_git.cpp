@@ -254,7 +254,7 @@ public:
         }
     }
 
-    void vaccineCheck(Vaccine *vaccines, int level, Vaccine_Details &vaccine_Details)
+    void vaccineCheck(Vaccine *vaccines, int level, Vaccine_Details &vaccine_Details, int &credit)
     {
         for (int i = 0; i < level; i++)
         {
@@ -262,6 +262,17 @@ public:
             {
                 vaccine_Details.VaccineNumber++;
                 vaccines[i].is_recive = true;
+                cout << "\033[" << 10 << ";" << 25 << "H";
+                cout << "Vaccine collected!";
+                cout << "\033[" << 11 << ";" << 25 << "H";
+                cout << level+1 << " credit gained!";
+                sleep(1);
+                // پاک کردن پیام پس از تأخیر
+                cout << "\033[" << 10 << ";" << 17 << "H";
+                cout << "                          ";
+                cout << "\033[" << 20 << ";" << 1 << "H";
+
+                credit += level +1;
                 break;
             }
         }
@@ -275,6 +286,13 @@ public:
             {
                 ammo_Boxes[i].isRecive = true;
                 AmmoNumber++;
+                cout << "\033[" << 10 << ";" << 25 << "H";
+                cout << "Ammo collected!";
+                sleep(1);
+                // پاک کردن پیام پس از تأخیر
+                cout << "\033[" << 10 << ";" << 17 << "H";
+                cout << "                          ";
+                cout << "\033[" << 20 << ";" << 1 << "H";
                 // gun.AmmoMagazine++;
                 break;
             }
@@ -1115,7 +1133,7 @@ int main()
         if (userInput == 'w' || userInput == 'a' || userInput == 's' || userInput == 'd')
         {
             game_board.player.move(userInput); // حرکت بازیکن بر اساس جهت حرکت
-            game_board.player.vaccineCheck(game_board.Vaccines, game_board.level.levelNumber, game_board.vaccine_Details);
+            game_board.player.vaccineCheck(game_board.Vaccines, game_board.level.levelNumber, game_board.vaccine_Details, game_board.credit.CreditNumber);
             game_board.player.ammoBoxCheck(game_board.ammo_Boxes, game_board.level.levelNumber, game_board.ammo_Details, game_board.gun.AmmoMagazine);
             for (int i = 0; i < game_board.level.levelNumber; i++)
             {
