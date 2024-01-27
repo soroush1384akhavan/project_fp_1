@@ -17,7 +17,7 @@ using namespace std;
 
 void Header();
 // void load(Game_board);
-//meow
+// meow
 void Clear_scr()
 {
     cout << "\033[1;1H"; // Move cursor to the top left corner
@@ -30,6 +30,15 @@ void Clear_scr()
     system("clear");
 #endif
 }
+
+class Round
+{
+public:
+    int RoundNumber;
+    Round(int number = 0) : RoundNumber(number)
+    {
+    }
+};
 class Kill
 {
 public:
@@ -37,66 +46,80 @@ public:
     Kill(int number = 0) : KillNumber(number)
     {
     }
-    // Round round;
 
-    // void count(){
+    void count(Round &round)
+    {
 
-    //     cout << "\033[" << 10 << ";" << 25 << "H";
-        
-    //     if(KillNumber == 1){
-    //         cout << "First blood";
-    //     }
-    //     if(KillNumber == 2){
-    //         cout << "Double kill";
-    //     }
-    //     if(KillNumber == 3){
-    //         if(round.RoundNumber %2 == 0)
-    //         {
-    //             cout << "Triple kill";
-    //         }
-    //         else if(round.RoundNumber %2 != 0)
-    //         {
-    //             cout << "Hattrick";
-    //         }
-    //     }
-    //     if(KillNumber == 4){
-    //         cout << "Team Killer";
-    //     }
-    //     if(KillNumber == 5){
-    //         cout << "Headshot";
-    //     }
-    //     if(KillNumber == 6){
-    //         cout << "Rampage";
-    //     }
-    //     if(KillNumber == 7){
-    //         cout << "killing Spree";
-    //     }
-    //     if(KillNumber == 8){
-    //         cout << "Unstoppable";
-    //     }
-    //     if(KillNumber == 9){
-    //         cout << "Monster Kill";
-    //     }
-    //     if(KillNumber == 10){
-    //         cout << "Multi Kill";
-    //     }
-    //     if(KillNumber == 11){
-    //         cout << "Ludicrouskill";
-    //     }
-    //     if(KillNumber == 12){
-    //         cout << "Ultra Kill";
-    //     }
-    //     if(KillNumber == 13){
-    //         cout << "Dominating";
-    //     }
-    //     if(KillNumber == 14){
-    //         cout << "Godlike";
-    //     }
-    //     sleep(1);
-    //     cout << "\033[" << 10 << ";" << 17 << "H";
-    //     cout << "                          ";
-    //     cout << "\033[" << 20 << ";" << 1 << "H";
-    // }
+        cout << "\033[" << 10 << ";" << 25 << "H";
+
+        if (KillNumber == 1)
+        {
+            cout << "First blood";
+        }
+        if (KillNumber == 2)
+        {
+            cout << "Double kill";
+        }
+        if (KillNumber == 3)
+        {
+            if (round.RoundNumber % 2 == 0)
+            {
+                cout << "Triple kill";
+            }
+            else if (round.RoundNumber % 2 != 0)
+            {
+                cout << "Hattrick";
+            }
+        }
+        if (KillNumber == 4)
+        {
+            cout << "Team Killer";
+        }
+        if (KillNumber == 5)
+        {
+            cout << "Headshot";
+        }
+        if (KillNumber == 6)
+        {
+            cout << "Rampage";
+        }
+        if (KillNumber == 7)
+        {
+            cout << "killing Spree";
+        }
+        if (KillNumber == 8)
+        {
+            cout << "Unstoppable";
+        }
+        if (KillNumber == 9)
+        {
+            cout << "Monster Kill";
+        }
+        if (KillNumber == 10)
+        {
+            cout << "Multi Kill";
+        }
+        if (KillNumber == 11)
+        {
+            cout << "Ludicrouskill";
+        }
+        if (KillNumber == 12)
+        {
+            cout << "Ultra Kill";
+        }
+        if (KillNumber == 13)
+        {
+            cout << "Dominating";
+        }
+        if (KillNumber == 14)
+        {
+            cout << "Godlike";
+        }
+        sleep(1);
+        cout << "\033[" << 10 << ";" << 17 << "H";
+        cout << "                          ";
+        cout << "\033[" << 20 << ";" << 1 << "H";
+    }
 };
 class Player
 {
@@ -287,7 +310,7 @@ public:
         AmmoMagazine = 10;
         range = 3;
     }
-    void shoot(char direction, Zombie *zombies, Player &player, Kill &kill_, int Level)
+    void shoot(char direction, Zombie *zombies, Player &player, Kill &kill_, int Level, Round &round)
     {
         if (direction == 't' || direction == 'T')
         {
@@ -301,6 +324,7 @@ public:
                     {
                         zombies[i].isActive = false;
                         kill_.KillNumber++;
+                        kill_.count(round);
                         break;
                     }
                     else if (zombies[i].isActive && zombies[i].x == player.x)
@@ -340,6 +364,7 @@ public:
                     {
                         zombies[i].isActive = false;
                         kill_.KillNumber++;
+                        kill_.count(round);
                         // cout << "Zombie hit! Zombie at (" << zombies[i].x << ", " << zombies[i].y << ") eliminated." << endl;
                         break;
                     }
@@ -380,6 +405,7 @@ public:
                     {
                         zombies[i].isActive = false;
                         kill_.KillNumber++;
+                        kill_.count(round);
                         // cout << "Zombie hit! Zombie at (" << zombies[i].x << ", " << zombies[i].y << ") eliminated." << endl;
                         break;
                     }
@@ -421,6 +447,7 @@ public:
                     {
                         zombies[i].isActive = false;
                         kill_.KillNumber++;
+                        kill_.count(round);
                         // cout << "Zombie hit! Zombie at (" << zombies[i].x << ", " << zombies[i].y << ") eliminated." << endl;
                         break;
                     }
@@ -449,12 +476,14 @@ public:
             }
         }
     }
-    void reload(char direction){
+    void reload(char direction)
+    {
         int freeMag = 3 - AmmoNumber;
 
         if (direction == 'r' || direction == 'R')
         {
-            if(AmmoMagazine >=3 && AmmoNumber ==0){
+            if (AmmoMagazine >= 3 && AmmoNumber == 0)
+            {
                 AmmoNumber += 3;
                 AmmoMagazine -= 3;
 
@@ -466,10 +495,11 @@ public:
                 cout << "                          ";
                 cout << "\033[" << 20 << ";" << 1 << "H";
             }
-            else if(AmmoMagazine > 3 && AmmoNumber >0 && AmmoNumber < 3){
+            else if (AmmoMagazine > 3 && AmmoNumber > 0 && AmmoNumber < 3)
+            {
                 AmmoMagazine = AmmoMagazine - freeMag;
-                AmmoNumber =3;
-                
+                AmmoNumber = 3;
+
                 cout << "\033[" << 10 << ";" << 25 << "H";
                 cout << "Reloaded!";
                 sleep(1);
@@ -478,8 +508,9 @@ public:
                 cout << "                          ";
                 cout << "\033[" << 20 << ";" << 1 << "H";
             }
-            else if(AmmoNumber == 3){
-                
+            else if (AmmoNumber == 3)
+            {
+
                 cout << "\033[" << 10 << ";" << 25 << "H";
                 cout << "The gun is already Charged";
                 sleep(1);
@@ -488,8 +519,9 @@ public:
                 cout << "                          ";
                 cout << "\033[" << 20 << ";" << 1 << "H";
             }
-            else if(AmmoMagazine == 0){
-                
+            else if (AmmoMagazine == 0)
+            {
+
                 cout << "\033[" << 10 << ";" << 25 << "H";
                 cout << "No Ammo!";
                 sleep(1);
@@ -535,15 +567,6 @@ class Credit
 public:
     int CreditNumber;
     Credit(int number = 0) : CreditNumber(number)
-    {
-    }
-};
-
-class Round
-{
-public:
-    int RoundNumber;
-    Round(int number = 0) : RoundNumber(number)
     {
     }
 };
@@ -595,7 +618,7 @@ public:
 class ammoBox_Details
 {
 public:
-    int AmmoBoxNumber= 0;
+    int AmmoBoxNumber = 0;
     int x;
     int y;
     bool isRecive = false;
@@ -625,7 +648,8 @@ public:
 
     void display()
     {
-        if(!isRecive){
+        if (!isRecive)
+        {
             cout << "\033[" << y << ";" << x << "H"; // Set cursor position
             cout << "\033[36m";                      // ANSI escape code for red color
             cout << "A";
@@ -634,7 +658,6 @@ public:
         }
     }
 };
-
 
 class Health
 {
@@ -749,21 +772,21 @@ public:
         {
             for (int j = 0; j < level.levelNumber; j++)
             {
-                if (!is_same_position_V(Vaccines[i], Vaccines[j], i, j))
+                //if (!is_same_position_V(Vaccines[i], Vaccines[j], i, j))
                 {
                     Vaccines[i].display();
                 }
-                else
+                //else
                 {
                     break;
                 }
             }
         }
-        for (int i = 0; i < level.levelNumber ; i++)
+        for (int i = 0; i < level.levelNumber; i++)
         {
-            for (int j = 0; j < level.levelNumber ; j++)
+            for (int j = 0; j < level.levelNumber; j++)
             {
-                if (!is_same_position_A(Ammo_Boxes[i],Ammo_Boxes[j], i, j))
+                if (!is_same_position_A(Ammo_Boxes[i], Ammo_Boxes[j], i, j))
                 {
                     Ammo_Boxes[i].display();
                 }
@@ -876,7 +899,6 @@ public:
 // {
 //     PlaySound(TEXT("death.wiv"), NULL, SND_ASYNC);
 // }
-
 
 void load(Game_board &game_board)
 {
@@ -996,7 +1018,7 @@ bool lose()
 
 bool win(Game_board game_board)
 {
-    if (game_board.player.x == game_board.door.x && game_board.player.y == game_board.door.y)// && game_board.vaccine_Details.is_recive)
+    if (game_board.player.x == game_board.door.x && game_board.player.y == game_board.door.y) // && game_board.vaccine_Details.is_recive)
     {
         return true;
     }
@@ -1072,8 +1094,8 @@ int main()
         }
         if (userInput == 'w' || userInput == 'a' || userInput == 's' || userInput == 'd')
             game_board.player.move(userInput); // حرکت بازیکن بر اساس جهت حرکت
-            // game_board.player.vaccineCheck(game_board.vaccine_Details); // چک کردن دریافت واکسن
-            // game_board.player.ammoBoxCheck(game_board.ammo_Details); // چک کردن دریافت مهمات
+        // game_board.player.vaccineCheck(game_board.vaccine_Details); // چک کردن دریافت واکسن
+        // game_board.player.ammoBoxCheck(game_board.ammo_Details); // چک کردن دریافت مهمات
         // userInput_shoot = getUserInput_move_shoot(); // دریافت جهت تیر
         // game_board.gun.shoot(userInput_shoot, game_board.zombies, game_board.player);
         // if (userInput == 'T' || userInput == 't')
@@ -1082,7 +1104,7 @@ int main()
         // }
         if (userInput == 't' || userInput == 'g' || userInput == 'f' || userInput == 'h')
         {
-            game_board.gun.shoot(userInput, game_board.zombies, game_board.player, game_board.kill_, game_board.level.levelNumber);
+            game_board.gun.shoot(userInput, game_board.zombies, game_board.player, game_board.kill_, game_board.level.levelNumber, game_board.round);
         }
         if (userInput == 'r' || userInput == 'R')
         {
