@@ -16,6 +16,8 @@
 using namespace std;
 
 void Header();
+char getUserInput();
+class Gun;
 // void load(Game_board);
 // meow
 void Clear_scr()
@@ -392,7 +394,7 @@ public:
 
     void ZombiesCeck(Player &player, int level, int &health)
     {
-        if (abs(x - player.x) <= 1 && abs(y - player.y) <= 1)
+        if (abs(x - player.x) <= 1 && abs(y - player.y) <= 1 && isActive)
         {
             health--;
         }
@@ -1030,8 +1032,10 @@ bool lose(Game_board &game_board)
 {
     if (game_board.health.HealthNumber == 0)
     {
+
         return true;
     }
+
     return false;
 }
 
@@ -1106,7 +1110,15 @@ int main()
     Game_board game_board;
     Header(game_board);
     char userInput;
-
+    if (lose(game_board))
+    {
+        cout << " You Died!" << endl;
+        cout << " You Lose! Would you like to try again?(y/n)";
+        char command = getUserInput();
+        if (command == 'y' || command == 'Y')
+        {
+        }
+    }
     while (!(lose(game_board)))
     {
         userInput = getUserInput(); // دریافت جهت حرکت
