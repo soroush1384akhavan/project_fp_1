@@ -18,7 +18,7 @@ using namespace std;
 void Header();
 class Gun;
 // void load(Game_board);
-//int colectAmmo();
+
 void Clear_scr()
 {
     cout << "\033[1;1H"; // Move cursor to the top left corner
