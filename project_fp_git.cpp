@@ -267,15 +267,15 @@ public:
         }
     }
 
-    void ammoBoxCheck(Ammo_Box *ammo_Boxes, int level,ammoBox_Details &ammoBox_Details)
+    void ammoBoxCheck(Ammo_Box *ammo_Boxes, int level,ammoBox_Details &ammoBox_Details,int &AmmoNumber)
     {
         for (int i = 0; i < level; i++)
         {
             if (x == ammo_Boxes[i].x && y == ammo_Boxes[i].y)
             {
                 ammo_Boxes[i].isRecive = true;
-                ammoBox_Details.AmmoBoxNumber++;
-                gun.AmmoMagazine++;
+                AmmoNumber++;
+                // gun.AmmoMagazine++;
                 break;
             }
         }
@@ -588,26 +588,14 @@ public:
 
         if (direction == 'r' || direction == 'R')
         {
-            if (AmmoMagazine >= MagazineSize && AmmoNumber == 0)
-            {
-                AmmoNumber += MagazineSize;
-                AmmoMagazine -= MagazineSize;
-
+            
+            if(AmmoNumber <3){
+                for(;AmmoNumber!=3 && AmmoMagazine >0;){
+                    AmmoMagazine--;
+                    AmmoNumber++;
+                }
                 cout << "\033[" << 10 << ";" << 25 << "H";
-                cout << "Reloaded!";
-                sleep(1);
-                // پاک کردن پیام پس از تأخیر
-                cout << "\033[" << 10 << ";" << 17 << "H";
-                cout << "                          ";
-                cout << "\033[" << 20 << ";" << 1 << "H";
-            }
-            else if (AmmoMagazine > MagazineSize && AmmoNumber > 0 && AmmoNumber < MagazineSize)
-            {
-                AmmoMagazine = AmmoMagazine - freeMag;
-                AmmoNumber = MagazineSize;
-
-                cout << "\033[" << 10 << ";" << 25 << "H";
-                cout << "Reloaded!";
+                cout << "Reloading!";
                 sleep(1);
                 // پاک کردن پیام پس از تأخیر
                 cout << "\033[" << 10 << ";" << 17 << "H";
@@ -1136,7 +1124,7 @@ int main()
         {
             game_board.player.move(userInput); // حرکت بازیکن بر اساس جهت حرکت
             game_board.player.vaccineCheck(game_board.Vaccines, game_board.level.levelNumber, game_board.vaccine_Details);
-            game_board.player.ammoBoxCheck(game_board.ammo_Boxes, game_board.level.levelNumber, game_board.ammo_Details);
+            game_board.player.ammoBoxCheck(game_board.ammo_Boxes, game_board.level.levelNumber, game_board.ammo_Details, game_board.gun.AmmoMagazine);
         }
         // userInput_shoot = getUserInput_move_shoot(); // دریافت جهت تیر
         // game_board.gun.shoot(userInput_shoot, game_board.zombies, game_board.player);
