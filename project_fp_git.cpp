@@ -19,7 +19,7 @@ void Header();
 char getUserInput();
 class Gun;
 // void load(Game_board);
-// meow
+//int colectAmmo();
 void Clear_scr()
 {
     cout << "\033[1;1H"; // Move cursor to the top left corner
@@ -267,7 +267,7 @@ public:
         }
     }
 
-    void ammoBoxCheck(Ammo_Box *ammo_Boxes, int level, ammoBox_Details &ammoBox_Details)
+    void ammoBoxCheck(Ammo_Box *ammo_Boxes, int level,ammoBox_Details &ammoBox_Details)
     {
         for (int i = 0; i < level; i++)
         {
@@ -275,6 +275,7 @@ public:
             {
                 ammo_Boxes[i].isRecive = true;
                 ammoBox_Details.AmmoBoxNumber++;
+                gun.AmmoMagazine++;
                 break;
             }
         }
@@ -411,7 +412,8 @@ public:
     Gun()
     {
         AmmoNumber = 3;
-        AmmoMagazine = 10;
+        AmmoMagazine = 0;
+        MagazineSize = 3;
         range = 3;
     }
     void shoot(char direction, Zombie *zombies, Player &player, Kill &kill_, int Level, Round &round)
@@ -582,14 +584,14 @@ public:
     }
     void reload(char direction)
     {
-        int freeMag = 3 - AmmoNumber;
+        int freeMag = MagazineSize - AmmoNumber;
 
         if (direction == 'r' || direction == 'R')
         {
-            if (AmmoMagazine >= 3 && AmmoNumber == 0)
+            if (AmmoMagazine >= MagazineSize && AmmoNumber == 0)
             {
-                AmmoNumber += 3;
-                AmmoMagazine -= 3;
+                AmmoNumber += MagazineSize;
+                AmmoMagazine -= MagazineSize;
 
                 cout << "\033[" << 10 << ";" << 25 << "H";
                 cout << "Reloaded!";
@@ -599,10 +601,10 @@ public:
                 cout << "                          ";
                 cout << "\033[" << 20 << ";" << 1 << "H";
             }
-            else if (AmmoMagazine > 3 && AmmoNumber > 0 && AmmoNumber < 3)
+            else if (AmmoMagazine > MagazineSize && AmmoNumber > 0 && AmmoNumber < MagazineSize)
             {
                 AmmoMagazine = AmmoMagazine - freeMag;
-                AmmoNumber = 3;
+                AmmoNumber = MagazineSize;
 
                 cout << "\033[" << 10 << ";" << 25 << "H";
                 cout << "Reloaded!";
@@ -612,7 +614,7 @@ public:
                 cout << "                          ";
                 cout << "\033[" << 20 << ";" << 1 << "H";
             }
-            else if (AmmoNumber == 3)
+            else if (AmmoNumber == MagazineSize)
             {
 
                 cout << "\033[" << 10 << ";" << 25 << "H";
@@ -1065,6 +1067,9 @@ void Header(Game_board &game_board) // نمایش منوی اصلی بازی
     main.printHeader();
     main.Options(game_board);
 }
+// int colectAmmo(Gun &gun){
+//     gun.AmmoMagazine++;
+// }
 
 void save(Game_board &game_board)
 {
@@ -1132,13 +1137,7 @@ int main()
             game_board.player.move(userInput); // حرکت بازیکن بر اساس جهت حرکت
             game_board.player.vaccineCheck(game_board.Vaccines, game_board.level.levelNumber, game_board.vaccine_Details);
             game_board.player.ammoBoxCheck(game_board.ammo_Boxes, game_board.level.levelNumber, game_board.ammo_Details);
-            for (int i = 0; i < game_board.level.levelNumber; i++)
-            {
-                game_board.zombies[i].ZombiesCeck(game_board.player, game_board.level.levelNumber, game_board.health.HealthNumber);
-            }
         }
-        //  // چک کردن دریافت واکسن
-        // game_board.player.ammoBoxCheck(game_board.ammo_Details); // چک کردن دریافت مهمات
         // userInput_shoot = getUserInput_move_shoot(); // دریافت جهت تیر
         // game_board.gun.shoot(userInput_shoot, game_board.zombies, game_board.player);
         // if (userInput == 'T' || userInput == 't')
