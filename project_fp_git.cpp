@@ -162,18 +162,18 @@ public:
         }
     }
 
-    // void vaccineCheck(Vaccine *Vaccines, int level)
-    // {
-    //     for(int i=0; i< level; i++)
-    //     {
-    //         if (x == Vaccines[i].x && y == Vaccines[i].y)
-    //         {
-    //             Vaccines[i].is_recive = true;
-    //         }
-    //     }
-    // }
+    void vaccineCheck(Vaccine *Vaccines, int level)
+    {
+        for(int i=0; i< level; i++)
+        {
+            if (x == Vaccines[i].x && y == Vaccines[i].y)
+            {
+                Vaccines[i].is_recive = true;
+            }
+        }
+    }
 
-    // void ammoBoxChack(Ammo_Box *Ammo_Boxes, int level)
+    // void ammoBoxCheck(Ammo_Box *Ammo_Boxes, int level)
     // {
     //     for (int i=0; i < level; i++)
     //     {
