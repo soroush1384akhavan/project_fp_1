@@ -19,7 +19,7 @@ void Header();
 char getUserInput();
 class Gun;
 // void load(Game_board);
-
+// int colectAmmo();
 void Clear_scr()
 {
     cout << "\033[1;1H"; // Move cursor to the top left corner
@@ -267,7 +267,7 @@ public:
         }
     }
 
-    void ammoBoxCheck(Ammo_Box *ammo_Boxes, int level,ammoBox_Details &ammoBox_Details,int &AmmoNumber)
+    void ammoBoxCheck(Ammo_Box *ammo_Boxes, int level, ammoBox_Details &ammoBox_Details, int &AmmoNumber)
     {
         for (int i = 0; i < level; i++)
         {
@@ -588,9 +588,11 @@ public:
 
         if (direction == 'r' || direction == 'R')
         {
-            
-            if(AmmoNumber <3){
-                for(;AmmoNumber!=3 && AmmoMagazine >0;){
+
+            if (AmmoNumber < 3)
+            {
+                for (; AmmoNumber != 3 && AmmoMagazine > 0;)
+                {
                     AmmoMagazine--;
                     AmmoNumber++;
                 }
@@ -1103,15 +1105,6 @@ int main()
     Game_board game_board;
     Header(game_board);
     char userInput;
-    if (lose(game_board))
-    {
-        cout << " You Died!" << endl;
-        cout << " You Lose! Would you like to try again?(y/n)";
-        char command = getUserInput();
-        if (command == 'y' || command == 'Y')
-        {
-        }
-    }
     while (!(lose(game_board)))
     {
         userInput = getUserInput(); // دریافت جهت حرکت
@@ -1125,6 +1118,10 @@ int main()
             game_board.player.move(userInput); // حرکت بازیکن بر اساس جهت حرکت
             game_board.player.vaccineCheck(game_board.Vaccines, game_board.level.levelNumber, game_board.vaccine_Details);
             game_board.player.ammoBoxCheck(game_board.ammo_Boxes, game_board.level.levelNumber, game_board.ammo_Details, game_board.gun.AmmoMagazine);
+            for (int i = 0; i < game_board.level.levelNumber; i++)
+            {
+                game_board.zombies[i].ZombiesCeck(game_board.player, game_board.level.levelNumber, game_board.health.HealthNumber);
+            }
         }
         // userInput_shoot = getUserInput_move_shoot(); // دریافت جهت تیر
         // game_board.gun.shoot(userInput_shoot, game_board.zombies, game_board.player);
@@ -1163,6 +1160,15 @@ int main()
             game_board.Reset_position();
             game_board.print_Game_board();
             // winSound();
+        }
+    }
+    if (lose(game_board))
+    {
+        cout << " You Died!" << endl;
+        cout << " You Lose! Would you like to try again?(y/n)";
+        char command = getUserInput();
+        if (command == 'y' || command == 'Y')
+        {
         }
     }
     // loseSound();
