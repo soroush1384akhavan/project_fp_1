@@ -588,8 +588,18 @@ public:
 
         if (direction == 'r' || direction == 'R')
         {
+            if (AmmoMagazine == 0)
+            {
+                cout << "\033[" << 10 << ";" << 25 << "H";
+                cout << "No Ammo!";
+                sleep(1);
+                // پاک کردن پیام پس از تأخیر
+                cout << "\033[" << 10 << ";" << 17 << "H";
+                cout << "                          ";
+                cout << "\033[" << 20 << ";" << 1 << "H";
+            }
 
-            if (AmmoNumber < 3)
+            else if (AmmoNumber < 3)
             {
                 for (; AmmoNumber != 3 && AmmoMagazine > 0;)
                 {
@@ -609,17 +619,6 @@ public:
 
                 cout << "\033[" << 10 << ";" << 25 << "H";
                 cout << "The gun is already Charged";
-                sleep(1);
-                // پاک کردن پیام پس از تأخیر
-                cout << "\033[" << 10 << ";" << 17 << "H";
-                cout << "                          ";
-                cout << "\033[" << 20 << ";" << 1 << "H";
-            }
-            else if (AmmoMagazine == 0)
-            {
-
-                cout << "\033[" << 10 << ";" << 25 << "H";
-                cout << "No Ammo!";
                 sleep(1);
                 // پاک کردن پیام پس از تأخیر
                 cout << "\033[" << 10 << ";" << 17 << "H";
