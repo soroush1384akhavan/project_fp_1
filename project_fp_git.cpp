@@ -37,6 +37,66 @@ public:
     Kill(int number = 0) : KillNumber(number)
     {
     }
+    // Round round;
+
+    // void count(){
+
+    //     cout << "\033[" << 10 << ";" << 25 << "H";
+        
+    //     if(KillNumber == 1){
+    //         cout << "First blood";
+    //     }
+    //     if(KillNumber == 2){
+    //         cout << "Double kill";
+    //     }
+    //     if(KillNumber == 3){
+    //         if(round.RoundNumber %2 == 0)
+    //         {
+    //             cout << "Triple kill";
+    //         }
+    //         else if(round.RoundNumber %2 != 0)
+    //         {
+    //             cout << "Hattrick";
+    //         }
+    //     }
+    //     if(KillNumber == 4){
+    //         cout << "Team Killer";
+    //     }
+    //     if(KillNumber == 5){
+    //         cout << "Headshot";
+    //     }
+    //     if(KillNumber == 6){
+    //         cout << "Rampage";
+    //     }
+    //     if(KillNumber == 7){
+    //         cout << "killing Spree";
+    //     }
+    //     if(KillNumber == 8){
+    //         cout << "Unstoppable";
+    //     }
+    //     if(KillNumber == 9){
+    //         cout << "Monster Kill";
+    //     }
+    //     if(KillNumber == 10){
+    //         cout << "Multi Kill";
+    //     }
+    //     if(KillNumber == 11){
+    //         cout << "Ludicrouskill";
+    //     }
+    //     if(KillNumber == 12){
+    //         cout << "Ultra Kill";
+    //     }
+    //     if(KillNumber == 13){
+    //         cout << "Dominating";
+    //     }
+    //     if(KillNumber == 14){
+    //         cout << "Godlike";
+    //     }
+    //     sleep(1);
+    //     cout << "\033[" << 10 << ";" << 17 << "H";
+    //     cout << "                          ";
+    //     cout << "\033[" << 20 << ";" << 1 << "H";
+    // }
 };
 class Player
 {
@@ -90,10 +150,14 @@ public:
     //     }
     // }
 
-    // void ammoChack(Ammo_Box ammoBox)
+    // void ammoBoxChack(Ammo_Box *Ammo_Boxes, int level)
     // {
-    //     if(x == ammoBox.x && y == ammoBox.y){
-    //         ammoBox.isRecive = true;
+    //     for (int i=0; i < level; i++)
+    //     {
+    //         if(x == ammoBox[i].x && y == ammoBox[i].y)
+    //         {
+    //             ammoBox[i].isRecive = true;
+    //         }
     //     }
     // }
 
@@ -539,6 +603,7 @@ public:
 
 class Ammo_Box : public ammoBox_Details
 {
+public:
     Ammo_Box()
     {
         setRandomCoordinates();
@@ -598,8 +663,8 @@ public:
     Credit credit;
     Round round;
     Health health;
-    // Ammo_Box ammo_Details;
-    // Ammo_Box Ammo_Boxes[20];
+    Ammo_Box ammo_Details;
+    Ammo_Box Ammo_Boxes[20];
     Kill kill_;
     Player player;
     Zombie zombies[20];
@@ -694,20 +759,20 @@ public:
                 }
             }
         }
-        // for (int i = 0; i < level.levelNumber/2 ; i++)
-        // {
-        //     for (int j = 0; j < level.levelNumber/2 ; j++)
-        //     {
-        //         if (!is_same_position_A(Ammo_Boxes[i],Ammo_Boxes[j], i, j))
-        //         {
-        //             Ammo_Boxes[i].display();
-        //         }
-        //         else
-        //         {
-        //             break;
-        //         }
-        //     }
-        // }
+        for (int i = 0; i < level.levelNumber ; i++)
+        {
+            for (int j = 0; j < level.levelNumber ; j++)
+            {
+                if (!is_same_position_A(Ammo_Boxes[i],Ammo_Boxes[j], i, j))
+                {
+                    Ammo_Boxes[i].display();
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
     }
     bool is_same_position(Zombie &zombie_1, Zombie &zombie_2, int index_1, int index_2)
     {
@@ -731,17 +796,17 @@ public:
             return false;
         }
     }
-    // bool is_same_position_A(Ammo_Box &ammo_box_1, Ammo_Box &ammo_box_2, int index_1, int index_2)
-    // {
-    //     if (ammo_box_1.x == ammo_box_2.x && ammo_box_1.y == ammo_box_2.y && index_1 != index_2)
-    //     {
-    //         return true;
-    //     }
-    //     else
-    //     {
-    //         return false;
-    //     }
-    // }
+    bool is_same_position_A(Ammo_Box &ammo_box_1, Ammo_Box &ammo_box_2, int index_1, int index_2)
+    {
+        if (ammo_box_1.x == ammo_box_2.x && ammo_box_1.y == ammo_box_2.y && index_1 != index_2)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 };
 
 class Game_Setting
@@ -1008,6 +1073,7 @@ int main()
         if (userInput == 'w' || userInput == 'a' || userInput == 's' || userInput == 'd')
             game_board.player.move(userInput); // حرکت بازیکن بر اساس جهت حرکت
             // game_board.player.vaccineCheck(game_board.vaccine_Details); // چک کردن دریافت واکسن
+            // game_board.player.ammoBoxCheck(game_board.ammo_Details); // چک کردن دریافت مهمات
         // userInput_shoot = getUserInput_move_shoot(); // دریافت جهت تیر
         // game_board.gun.shoot(userInput_shoot, game_board.zombies, game_board.player);
         // if (userInput == 'T' || userInput == 't')
