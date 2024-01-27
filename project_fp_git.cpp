@@ -121,6 +121,96 @@ public:
         cout << "\033[" << 20 << ";" << 1 << "H";
     }
 };
+
+class Vaccine_Details
+{
+public:
+    int VaccineNumber = 0;
+    int x;
+    int y;
+    bool is_recive;
+};
+
+class Vaccine : public Vaccine_Details
+{
+public:
+    Vaccine()
+    {
+        setRandomCoordinates();
+        is_recive = false;
+    }
+    void setRandomCoordinates()
+    {
+        // تنظیم seed یک بار در ابتدای برنامه
+        static bool seedSet = false;
+        if (!seedSet)
+        {
+            srand(static_cast<unsigned>(time(0)));
+            seedSet = true;
+        }
+
+        // تولید مختصات تصادفی
+        x = rand() % (15) + 2;
+        y = rand() % (13) + 4;
+    }
+
+    void display()
+    {
+        if (!is_recive)
+        {
+            cout << "\033[" << y << ";" << x << "H"; // Set cursor position
+            cout << "\e[0;33m";                      // ANSI escape code for red color
+            cout << "V";
+            cout << "\033[0m"; // Reset color to default
+            cout << "\033[" << 20 << ";" << 1 << "H";
+        }
+    }
+};
+
+class ammoBox_Details
+{
+public:
+    int AmmoBoxNumber = 0;
+    int x;
+    int y;
+    bool isRecive;
+};
+
+class Ammo_Box : public ammoBox_Details
+{
+public:
+    Ammo_Box()
+    {
+        setRandomCoordinates();
+        bool isRecive;
+    }
+    void setRandomCoordinates()
+    {
+        // تنظیم seed یک بار در ابتدای برنامه
+        static bool seedSet = false;
+        if (!seedSet)
+        {
+            srand(static_cast<unsigned>(time(0) + 1));
+            seedSet = true;
+        }
+
+        // تولید مختصات تصادفی
+        x = rand() % (15) + 2;
+        y = rand() % (13) + 4;
+    }
+
+    void display()
+    {
+        if (!isRecive)
+        {
+            cout << "\033[" << y << ";" << x << "H"; // Set cursor position
+            cout << "\033[36m";                      // ANSI escape code for red color
+            cout << "A";
+            cout << "\033[0m"; // Reset color to default
+            cout << "\033[" << 20 << ";" << 1 << "H";
+        }
+    }
+};
 class Player
 {
 public:
@@ -162,27 +252,31 @@ public:
         }
     }
 
-    void vaccineCheck(Vaccine *Vaccines, int level)
+    void vaccineCheck(Vaccine *vaccines, int level, Vaccine_Details &vaccine_Details)
     {
-        for(int i=0; i< level; i++)
+        for (int i = 0; i < level; i++)
         {
-            if (x == Vaccines[i].x && y == Vaccines[i].y)
+            if (x == vaccines[i].x && y == vaccines[i].y)
             {
-                Vaccines[i].is_recive = true;
+                vaccine_Details.VaccineNumber++;
+                vaccines[i].is_recive = true;
+                break;
             }
         }
     }
 
-    // void ammoBoxCheck(Ammo_Box *Ammo_Boxes, int level)
-    // {
-    //     for (int i=0; i < level; i++)
-    //     {
-    //         if(x == ammoBox[i].x && y == ammoBox[i].y)
-    //         {
-    //             ammoBox[i].isRecive = true;
-    //         }
-    //     }
-    // }
+    void ammoBoxCheck(Ammo_Box *ammo_Boxes, int level,ammoBox_Details &ammoBox_Details)
+    {
+        for (int i=0; i < level; i++)
+        {
+            if(x == ammo_Boxes[i].x && y == ammo_Boxes[i].y)
+            {
+                ammo_Boxes[i].isRecive = true;
+                ammoBox_Details.AmmoBoxNumber++;
+                break;
+            }
+        }
+    }
 
     void display()
     {
@@ -571,94 +665,6 @@ public:
     }
 };
 
-class vaccine_Details
-{
-public:
-    int VaccineNumber = 0;
-    int x;
-    int y;
-    bool is_recive = false;
-};
-
-class Vaccine : public vaccine_Details
-{
-public:
-    Vaccine()
-    {
-        setRandomCoordinates();
-    }
-    void setRandomCoordinates()
-    {
-        // تنظیم seed یک بار در ابتدای برنامه
-        static bool seedSet = false;
-        if (!seedSet)
-        {
-            srand(static_cast<unsigned>(time(0)));
-            seedSet = true;
-        }
-
-        // تولید مختصات تصادفی
-        x = rand() % (15) + 2;
-        y = rand() % (13) + 4;
-    }
-
-    void display()
-    {
-        if (!is_recive)
-        {
-            cout << "\033[" << y << ";" << x << "H"; // Set cursor position
-            cout << "\e[0;33m";                      // ANSI escape code for red color
-            cout << "V";
-            cout << "\033[0m"; // Reset color to default
-            cout << "\033[" << 20 << ";" << 1 << "H";
-        }
-    }
-};
-
-class ammoBox_Details
-{
-public:
-    int AmmoBoxNumber = 0;
-    int x;
-    int y;
-    bool isRecive = false;
-};
-
-class Ammo_Box : public ammoBox_Details
-{
-public:
-    Ammo_Box()
-    {
-        setRandomCoordinates();
-    }
-    void setRandomCoordinates()
-    {
-        // تنظیم seed یک بار در ابتدای برنامه
-        static bool seedSet = false;
-        if (!seedSet)
-        {
-            srand(static_cast<unsigned>(time(0)+1));
-            seedSet = true;
-        }
-
-        // تولید مختصات تصادفی
-        x = rand() % (15) + 2;
-        y = rand() % (13) + 4;
-    }
-
-    void display()
-    {
-        if (!isRecive)
-        {
-            cout << "\033[" << y << ";" << x << "H"; // Set cursor position
-            cout << "\033[36m";                      // ANSI escape code for red color
-            cout << "A";
-            cout << "\033[0m"; // Reset color to default
-            cout << "\033[" << 20 << ";" << 1 << "H";
-        }
-    }
-};
-
 class Health
 {
 public:
@@ -681,13 +687,13 @@ class Game_board
 {
 public:
     Level level;
-    Vaccine vaccine_Details;
+    Vaccine_Details vaccine_Details;
     Vaccine Vaccines[20];
     Credit credit;
     Round round;
     Health health;
     Ammo_Box ammo_Details;
-    Ammo_Box Ammo_Boxes[20];
+    Ammo_Box ammo_Boxes[20];
     Kill kill_;
     Player player;
     Zombie zombies[20];
@@ -712,6 +718,7 @@ public:
         for (int i = 0; i < level.levelNumber; i++)
         {
             zombies[i].setRandomCoordinates();
+            Vaccines[i].setRandomCoordinates();
             for (int j = 0; j < i; j++)
             {
                 while (is_same_position(zombies[i], zombies[j], i, j))
@@ -786,9 +793,9 @@ public:
         {
             for (int j = 0; j < level.levelNumber; j++)
             {
-                if (!is_same_position_A(Ammo_Boxes[i], Ammo_Boxes[j], i, j))
+                if (!is_same_position_A(ammo_Boxes[i], ammo_Boxes[j], i, j))
                 {
-                    Ammo_Boxes[i].display();
+                    ammo_Boxes[i].display();
                 }
                 else
                 {
@@ -1018,9 +1025,13 @@ bool lose()
 
 bool win(Game_board game_board)
 {
-    if (game_board.player.x == game_board.door.x && game_board.player.y == game_board.door.y) // && game_board.vaccine_Details.is_recive)
+    if (game_board.player.x == game_board.door.x && game_board.player.y == game_board.door.y)
     {
-        return true;
+        for (int i = 0; i < game_board.level.levelNumber; i++)
+        {
+            if (game_board.Vaccines[i].is_recive)
+                return true;
+        }
     }
     return false;
 }
@@ -1093,8 +1104,12 @@ int main()
             save(game_board);
         }
         if (userInput == 'w' || userInput == 'a' || userInput == 's' || userInput == 'd')
+        {
             game_board.player.move(userInput); // حرکت بازیکن بر اساس جهت حرکت
-        // game_board.player.vaccineCheck(game_board.vaccine_Details); // چک کردن دریافت واکسن
+            game_board.player.vaccineCheck(game_board.Vaccines, game_board.level.levelNumber, game_board.vaccine_Details);
+            game_board.player.ammoBoxCheck(game_board.ammo_Boxes, game_board.level.levelNumber, game_board.ammo_Details);
+        }
+        //  // چک کردن دریافت واکسن
         // game_board.player.ammoBoxCheck(game_board.ammo_Details); // چک کردن دریافت مهمات
         // userInput_shoot = getUserInput_move_shoot(); // دریافت جهت تیر
         // game_board.gun.shoot(userInput_shoot, game_board.zombies, game_board.player);
@@ -1125,7 +1140,9 @@ int main()
             for (int i = 0; i < game_board.level.levelNumber; i++)
             {
                 game_board.zombies[i].isActive = true;
+                game_board.Vaccines[i].is_recive = false;
             }
+
             game_board.level.levelNumber++;
             Clear_scr();
             game_board.Reset_position();
