@@ -607,7 +607,7 @@ public:
         if (!is_recive)
         {
             cout << "\033[" << y << ";" << x << "H"; // Set cursor position
-            cout << "\033[30m";                      // ANSI escape code for red color
+            cout << "\e[0;33m";                      // ANSI escape code for red color
             cout << "V";
             cout << "\033[0m"; // Reset color to default
             cout << "\033[" << 20 << ";" << 1 << "H";
@@ -637,7 +637,7 @@ public:
         static bool seedSet = false;
         if (!seedSet)
         {
-            srand(static_cast<unsigned>(time(0)));
+            srand(static_cast<unsigned>(time(0)+1));
             seedSet = true;
         }
 
@@ -772,11 +772,11 @@ public:
         {
             for (int j = 0; j < level.levelNumber; j++)
             {
-                //if (!is_same_position_V(Vaccines[i], Vaccines[j], i, j))
+                if (!is_same_position_V(Vaccines[i], Vaccines[j], i, j))
                 {
                     Vaccines[i].display();
                 }
-                //else
+                else
                 {
                     break;
                 }
