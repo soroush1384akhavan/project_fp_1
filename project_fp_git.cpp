@@ -817,6 +817,32 @@ public:
         cout << "Credit required: " << (health) * (level + 1);
     }
 };
+
+// class ShowMenu
+// {
+// public:
+//     void printMenu(){
+//         Clear_scr();
+//         cout << "0-𝕣𝕖𝕥𝕦𝕣𝕟 𝕥𝕖 𝕘𝕒𝕞𝕖" << endl;
+//         cout << "𝟙-𝕟𝕖𝕨 𝕘𝕒𝕞𝕖" << endl;
+//         cout << "𝟚-𝕊𝕖𝕥𝕥𝕚𝕟𝕘𝕤" << endl;
+//         cout << "𝟛-𝔼𝕩𝕚𝕥" << endl;
+//     }
+
+//     void resume(){
+        
+//     }
+//     void newGame(){
+
+//     }
+//     void setting(Game_Setting &game_setting){
+//         game_setting.Setting();
+//     }
+//     void exit(){
+//         // Header();
+//     }
+// };
+
 class Game_board
 {
 public:
@@ -834,6 +860,7 @@ public:
     Door door;
     Gun gun;
     Upgrade upgrade;
+    // ShowMenu showmenu;
     void Details()
     {
         cout << "Level: " << level.levelNumber << " ";
@@ -979,6 +1006,7 @@ class Game_Setting
 {
 public:
     bool is_mute = true;
+    int index = 0;
 
     void Setting()
     {
@@ -1012,7 +1040,12 @@ public:
         }
         else if (step == 'n')
         {
-            // Header();
+            if(index == 0){
+                // Header();
+            }
+            else{
+                // back to game
+            }
         }
     }
 
@@ -1124,6 +1157,7 @@ public:
         if (userInput == 1)
         {
             game_board.print_Game_board();
+            game_Setting.index =1;
             // startSound();
         }
         else if (userInput == 2)
@@ -1131,6 +1165,7 @@ public:
             // startSound();
             load(game_board);
             game_board.print_Game_board();
+            game_Setting.index =1;
         }
         else if (userInput == 3)
         {
@@ -1248,6 +1283,7 @@ int main()
     int count = 0;
 
     Game_board game_board;
+    Game_Setting game_setting;
     Header(game_board);
     char userInput;
     while (!(lose(game_board)))
@@ -1297,7 +1333,7 @@ int main()
         game_board.print_Game_board();
         count++;
 
-        if (userInput == 'u')
+        if (userInput == 'u' || userInput == 'U')
         {
             game_board.upgrade.display(game_board.gun.MagazineSize, game_board.gun.AmmoNumber, game_board.level.levelNumber, game_board.gun.range, game_board.health.HealthNumber);
             char userInput_u = getUserInput();
@@ -1305,7 +1341,7 @@ int main()
             {
                 while (userInput_u != '0' && userInput_u != '1' && userInput_u != '2' && userInput_u != '3')
                 {
-                    cout << "\033[" << 14 << ";" << 45 << "H";
+                    cout << "\033[" << 16 << ";" << 45 << "H";
                     cout << "Please just enter the numbers in the menu: ";
                     userInput_u = getUserInput();
                 }
@@ -1330,6 +1366,39 @@ int main()
                 game_board.upgrade.Upgrade_health(game_board.health.HealthNumber, game_board.level.levelNumber, game_board.credit.CreditNumber);
             }
         }
+        if (userInput == 'm' || userInput == 'M')
+        {
+            // game_board.showmenu.printMenu();
+            char userInput_m = getUserInput();
+            if (userInput_m != '0' && userInput_m != '1' && userInput_m != '2' && userInput_m != '3')
+            {
+                while (userInput_m != '0' && userInput_m != '1' && userInput_m != '2' && userInput_m != '3')
+                {
+                    cout << "\033[" << 6 << ";" << 0 << "H";
+                    cout << "Please just enter the numbers in the menu: ";
+                    userInput_m = getUserInput();
+                }
+            }
+            if(userInput_m == 0)
+            {
+                load(game_board);
+            }
+            if(userInput == 1)
+            {
+                // reset data
+                // game_board.print_Game_board();
+                // game_setting.index =1;
+                // startSound();
+            }
+            if(userInput == 2)
+            {
+                // game_setting.Setting();
+            }
+            if(userInput == 3)
+            {
+                // exit game
+            }
+        }
 
         if (win(game_board))
         {
@@ -1342,9 +1411,9 @@ int main()
             if (game_board.level.levelNumber == 20)
             {
                 Clear_scr();
-                cout << "Congratulations! You have successfully collected all the vaccines!"<<endl; 
-                cout << "Now it is time to return to the Earth"<< endl; 
-                cout<< "Good Bye!"<< endl;
+                cout << "Congratulations! You have successfully collected all the vaccines!" << endl;
+                cout << "Now it is time to return to the Earth" << endl;
+                cout << "Good Bye!" << endl;
                 sleep(5);
                 // Header();
             }
@@ -1370,6 +1439,7 @@ int main()
     {
         cout << " You Died!" << endl;
         cout << " You Lose! Would you like to try again?(y/n)";
+        game_setting.index =0;
         char command = getUserInput();
         if (command == 'y' || command == 'Y')
         {
