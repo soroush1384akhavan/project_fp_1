@@ -355,7 +355,7 @@ public:
         static bool seedSet = false;
         if (!seedSet)
         {
-            srand(static_cast<unsigned>(time(0)));
+            srand(static_cast<unsigned>(time(0) + 3));
             seedSet = true;
         }
 
@@ -642,9 +642,9 @@ public:
                 cout << "\033[" << 20 << ";" << 1 << "H";
             }
 
-            else if (AmmoNumber < 3)
+            else if (AmmoNumber < MagazineSize)
             {
-                for (; AmmoNumber != 3 && AmmoMagazine > 0;)
+                for (; AmmoNumber != MagazineSize && AmmoMagazine > 0;)
                 {
                     AmmoMagazine--;
                     AmmoNumber++;
@@ -727,6 +727,96 @@ public:
     }
 };
 
+class Upgrade
+{
+public:
+    void Upgrade_magazin(int &MagazineSize, int level, int &credit)
+    {
+        if (credit >= (level)*MagazineSize && MagazineSize != 7)
+        {
+            credit -= (level)*MagazineSize;
+            MagazineSize++;
+            Clear_scr();
+            cout << "\033[" << 10 << ";" << 45 << "H";
+            cout << "Upgrade done successfully.Your magazine capacity is now  ." << MagazineSize;
+        }
+        else if (MagazineSize == 7)
+        {
+            cout << "\033[" << 10 << ";" << 45 << "H";
+            cout << "The selected item is maximum";
+        }
+        else
+        {
+            Clear_scr();
+            cout << "\033[" << 10 << ";" << 45 << "H";
+            cout << "Unfortunately, your credit is not enough to get this item. Please gain " << (level)*MagazineSize - credit << " more credit by playing ";
+        }
+    }
+
+    void Upgrade_range(int &range, int level, int &credit)
+    {
+        if (credit >= (level) + range && range != 10)
+        {
+            credit -= (level) + range;
+            range++;
+            Clear_scr();
+            cout << "\033[" << 10 << ";" << 45 << "H";
+            cout << "Upgrade done successfully.Your shotgun range is now " << range;
+        }
+        else if (range == 10)
+        {
+            cout << "\033[" << 10 << ";" << 45 << "H";
+            cout << "The selected item is maximum";
+        }
+        else
+        {
+            Clear_scr();
+            cout << "\033[" << 10 << ";" << 45 << "H";
+            cout << "Unfortunately, your credit is not enough to get this item. Please gain " << (level) + range - credit << " more credit by playing ";
+        }
+    }
+    void Upgrade_health(int &health, int level, int &credit)
+    {
+        if (credit >= (health) * (level + 1) && health != 5)
+        {
+            credit -= (health) * (level + 1);
+            health++;
+            Clear_scr();
+            cout << "\033[" << 10 << ";" << 45 << "H";
+            cout << "Additional health received successfully. Your health is now " << health;
+        }
+        else if (health == 5)
+        {
+            cout << "\033[" << 10 << ";" << 45 << "H";
+            cout << "The selected item is maximum";
+        }
+        else
+        {
+            Clear_scr();
+            cout << "\033[" << 10 << ";" << 45 << "H";
+            cout << "Unfortunately, your credit is not enough to get this item. Please gain " << (health) * (level + 1) - credit << " more credit by playing ";
+        }
+    }
+
+    void display(int MagazineSize, int ammonumber, int level, int range, int health)
+    {
+        Clear_scr();
+        cout << "\033[" << 8 << ";" << 45 << "H";
+        cout << "0 – Return to game.";
+        cout << "\033[" << 10 << ";" << 45 << "H";
+        cout << "1 – Upgrade capacity of magazine :";
+        cout << " 1 bullet ";
+        cout << " (maximum is " << 7 << " bullets, now is " << MagazineSize << ") ";
+        cout << "Credit required: " << (level)*MagazineSize;
+        cout << "\033[" << 12 << ";" << 45 << "H";
+        cout << "2 – Upgrade range of shotgun : 1 times the size of the person himself ";
+        cout << "(maximum is 10 times, now is " << range << ") ";
+        cout << "Credit required: " << (level) + range;
+        cout << "\033[" << 14 << ";" << 45 << "H";
+        cout << "3 – get an additional health (maximum is 5 healths, now is" << health;
+        cout << "Credit required: " << (health) * (level + 1);
+    }
+};
 class Game_board
 {
 public:
@@ -743,6 +833,7 @@ public:
     Zombie zombies[20];
     Door door;
     Gun gun;
+    Upgrade upgrade;
     void Details()
     {
         cout << "Level: " << level.levelNumber << " ";
@@ -1205,6 +1296,41 @@ int main()
         }
         game_board.print_Game_board();
         count++;
+
+        if (userInput == 'u')
+        {
+            game_board.upgrade.display(game_board.gun.MagazineSize, game_board.gun.AmmoNumber, game_board.level.levelNumber, game_board.gun.range, game_board.health.HealthNumber);
+            char userInput_u = getUserInput();
+            if (userInput_u != '0' && userInput_u != '1' && userInput_u != '2' && userInput_u != '3')
+            {
+                while (userInput_u != '0' && userInput_u != '1' && userInput_u != '2' && userInput_u != '3')
+                {
+                    cout << "\033[" << 14 << ";" << 45 << "H";
+                    cout << "Please just enter the numbers in the menu: ";
+                    userInput_u = getUserInput();
+                }
+            }
+            if (userInput_u == '0')
+            {
+                continue;
+            }
+
+            if (userInput_u == '1')
+            {
+                game_board.upgrade.Upgrade_magazin(game_board.gun.MagazineSize, game_board.level.levelNumber, game_board.credit.CreditNumber);
+            }
+
+            else if (userInput_u == '2')
+            {
+                game_board.upgrade.Upgrade_range(game_board.gun.range, game_board.level.levelNumber, game_board.credit.CreditNumber);
+            }
+
+            else if (userInput_u == '3')
+            {
+                game_board.upgrade.Upgrade_health(game_board.health.HealthNumber, game_board.level.levelNumber, game_board.credit.CreditNumber);
+            }
+        }
+
         if (win(game_board))
         {
             for (int i = 0; i < game_board.level.levelNumber; i++)
