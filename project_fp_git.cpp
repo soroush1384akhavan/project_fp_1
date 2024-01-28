@@ -18,6 +18,7 @@ using namespace std;
 void Header();
 char getUserInput();
 class Gun;
+class Game_board;
 // void load(Game_board);
 // int colectAmmo();
 void Clear_scr()
@@ -41,6 +42,30 @@ public:
     {
     }
 };
+
+// game sounds
+
+// void startSound()
+// {
+//     PlaySound(TEXT("exit.wav"), NULL, SND_SYNC);
+// }
+// void menuSound()
+// {
+//     PlaySound(TEXT("link.wav"), NULL, SND_SYNC);
+// }
+// void fireSound()
+// {
+//     PlaySound(TEXT("bomb_explosion.wav"), NULL, SND_SYNC);
+// }
+// void winSound()
+// {
+//     PlaySound(TEXT("round_end.wav"), NULL, SND_SYNC);
+// }
+// void loseSound()
+// {
+//     PlaySound(TEXT("death.wav"), NULL, SND_SYNC);
+// }
+
 class Kill
 {
 public:
@@ -54,15 +79,15 @@ public:
 
         cout << "\033[" << 10 << ";" << 25 << "H";
 
-        if (KillNumber == 1)
+        if (KillNumber % 14 == 1)
         {
             cout << "First blood";
         }
-        if (KillNumber == 2)
+        if (KillNumber % 14 == 2)
         {
             cout << "Double kill";
         }
-        if (KillNumber == 3)
+        if (KillNumber % 14 == 3)
         {
             if (round.RoundNumber % 2 == 0)
             {
@@ -73,47 +98,47 @@ public:
                 cout << "Hattrick";
             }
         }
-        if (KillNumber == 4)
+        if (KillNumber % 14 == 4)
         {
             cout << "Team Killer";
         }
-        if (KillNumber == 5)
+        if (KillNumber % 14 == 5)
         {
             cout << "Headshot";
         }
-        if (KillNumber == 6)
+        if (KillNumber % 14 == 6)
         {
             cout << "Rampage";
         }
-        if (KillNumber == 7)
+        if (KillNumber % 14 == 7)
         {
             cout << "killing Spree";
         }
-        if (KillNumber == 8)
+        if (KillNumber % 14 == 8)
         {
             cout << "Unstoppable";
         }
-        if (KillNumber == 9)
+        if (KillNumber % 14 == 9)
         {
             cout << "Monster Kill";
         }
-        if (KillNumber == 10)
+        if (KillNumber % 14 == 10)
         {
             cout << "Multi Kill";
         }
-        if (KillNumber == 11)
+        if (KillNumber % 14 == 11)
         {
             cout << "Ludicrouskill";
         }
-        if (KillNumber == 12)
+        if (KillNumber % 14 == 12)
         {
             cout << "Ultra Kill";
         }
-        if (KillNumber == 13)
+        if (KillNumber % 14 == 13)
         {
             cout << "Dominating";
         }
-        if (KillNumber == 14)
+        if (KillNumber % 14 == 14)
         {
             cout << "Godlike";
         }
@@ -265,14 +290,14 @@ public:
                 cout << "\033[" << 10 << ";" << 25 << "H";
                 cout << "Vaccine collected!";
                 cout << "\033[" << 11 << ";" << 25 << "H";
-                cout << level+1 << " credit gained!";
+                cout << level + 1 << " credit gained!";
                 sleep(1);
                 // پاک کردن پیام پس از تأخیر
                 cout << "\033[" << 10 << ";" << 17 << "H";
                 cout << "                          ";
                 cout << "\033[" << 20 << ";" << 1 << "H";
 
-                credit += level +1;
+                credit += level + 1;
                 break;
             }
         }
@@ -909,23 +934,15 @@ public:
     }
 };
 
-// game sounds
-// void startSound()
-// {
-//     PlaySound(TEXT("exit.wiv"), NULL, SND_ASYNC);
-// }
-// void fireSound()
-// {
-//     PlaySound(TEXT("bomb_explosion.wiv"), NULL, SND_ASYNC);
-// }
-// void winSound()
-// {
-//     PlaySound(TEXT("round_end.wiv"), NULL, SND_ASYNC);
-// }
-// void loseSound()
-// {
-//     PlaySound(TEXT("death.wiv"), NULL, SND_ASYNC);
-// }
+void Game_credit()
+{
+    Clear_scr();
+    cout << "created by :" << endl;
+    cout << "Soroush Akhavan , Amirmohammad Amrayi";
+    sleep(5);
+    Clear_scr();
+    // Header();
+}
 
 void load(Game_board &game_board)
 {
@@ -1020,12 +1037,19 @@ public:
         }
         else if (userInput == 2)
         {
+            // startSound();
             load(game_board);
             game_board.print_Game_board();
         }
         else if (userInput == 3)
         {
+            // menuSound();
             game_Setting.Setting();
+        }
+        else if (userInput == 4)
+        {
+            // menuSound();
+            Game_credit();
         }
     }
 
@@ -1057,6 +1081,17 @@ bool win(Game_board game_board)
         {
             if (game_board.Vaccines[i].is_recive)
                 return true;
+            else
+            {
+                cout << "\033[" << 10 << ";" << 25 << "H";
+                cout << "First get all the vaccine.";
+                sleep(1);
+                // پاک کردن پیام پس از تأخیر
+                cout << "\033[" << 10 << ";" << 17 << "H";
+                cout << "                          ";
+                cout << "\033[" << 20 << ";" << 1 << "H";
+                break;
+            }
         }
     }
     return false;
@@ -1075,6 +1110,7 @@ void Header(Game_board &game_board) // نمایش منوی اصلی بازی
     main.printHeader();
     main.Options(game_board);
 }
+
 // int colectAmmo(Gun &gun){
 //     gun.AmmoMagazine++;
 // }
@@ -1155,6 +1191,10 @@ int main()
         {
             game_board.gun.reload(userInput);
         }
+        if (userInput == 'e' || userInput == 'E')
+        {
+            // save and exit
+        }
 
         if (count % 2 == 0)
         {
@@ -1172,6 +1212,25 @@ int main()
                 game_board.zombies[i].isActive = true;
                 game_board.Vaccines[i].is_recive = false;
                 game_board.ammo_Boxes[i].isRecive = false;
+            }
+            if (game_board.level.levelNumber == 20)
+            {
+                Clear_scr();
+                cout << "Congratulations! You have successfully collected all the vaccines!"<<endl; 
+                cout << "Now it is time to return to the Earth"<< endl; 
+                cout<< "Good Bye!"<< endl;
+                sleep(5);
+                // Header();
+            }
+            else
+            {
+                cout << "\033[" << 10 << ";" << 25 << "H";
+                cout << "You Won! You have reached level " << game_board.level.levelNumber + 1;
+                sleep(1);
+                // پاک کردن پیام پس از تأخیر
+                cout << "\033[" << 10 << ";" << 17 << "H";
+                cout << "                          ";
+                cout << "\033[" << 20 << ";" << 1 << "H";
             }
 
             game_board.level.levelNumber++;
