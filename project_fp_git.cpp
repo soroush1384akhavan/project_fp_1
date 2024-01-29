@@ -994,7 +994,7 @@ public:
         {
             for (int j = 0; j < level.levelNumber; j++)
             {
-                if (!is_same_position_v_a(Vaccines[i], ammo_Boxes[j]) && !is_same_position_A(ammo_Boxes[i], ammo_Boxes[j], i, j) && (ammo_Boxes[i].x != 2 || ammo_Boxes[i].y != 4) && (ammo_Boxes[i].x != 16 || ammo_Boxes[i].y != 18))
+                if (!is_same_position_z_a(zombies[i], ammo_Boxes[j]) && !is_same_position_v_a(Vaccines[i], ammo_Boxes[j]) && !is_same_position_A(ammo_Boxes[i], ammo_Boxes[j], i, j) && (ammo_Boxes[i].x != 2 || ammo_Boxes[i].y != 4) && (ammo_Boxes[i].x != 16 || ammo_Boxes[i].y != 18))
                 {
                     ammo_Boxes[i].display();
                 }
@@ -1037,6 +1037,18 @@ public:
     bool is_same_position_z_v(Zombie &zombie, Vaccine &vaccine)
     {
         if (zombie.x == vaccine.x && zombie.y == vaccine.y)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    bool is_same_position_z_a(Zombie &zombie, Ammo_Box &ammo_Boxes)
+    {
+        if (zombie.x == ammo_Boxes.x && zombie.y == ammo_Boxes.y)
         {
             return true;
         }
@@ -1141,7 +1153,7 @@ public:
     }
 };
 
-void Game_credit()
+void Game_credit(Game_board &game_board)
 {
     Game_board game_board;
     Clear_scr();
@@ -1316,7 +1328,7 @@ public:
         else if (userInput == 4)
         {
             // menuSound();
-            Game_credit();
+            Game_credit(game_board);
         }
         else if (userInput == 6)
         {
@@ -1372,24 +1384,28 @@ bool lose(Game_board &game_board)
 
 bool win(Game_board game_board)
 {
+    int count_v = 0;
     if (game_board.player.x == game_board.door.x && game_board.player.y == game_board.door.y)
     {
-        for (int i = 0; i < game_board.level.levelNumber; i++)
+        for (int i = 0; i < (game_board.level.levelNumber); i++)
         {
             if (game_board.Vaccines[i].is_recive)
-                return true;
-            else
             {
-                cout << "\033[" << 10 << ";" << 25 << "H";
-                cout << "First get all the vaccine.";
-                sleep(1);
-                // پاک کردن پیام پس از تأخیر
-                cout << "\033[" << 10 << ";" << 17 << "H";
-                cout << "                          ";
-                cout << "\033[" << 20 << ";" << 1 << "H";
-                break;
+                count_v++;
+                if (count_v == game_board.level.levelNumber)
+                {
+                    return true;
+                }
             }
         }
+
+        cout << "\033[" << 10 << ";" << 25 << "H";
+        cout << "First get all the vaccine.";
+        sleep(1);
+        // پاک کردن پیام پس از تأخیر
+        cout << "\033[" << 10 << ";" << 17 << "H";
+        cout << "                          ";
+        cout << "\033[" << 20 << ";" << 1 << "H";
     }
     return false;
 }
@@ -1616,6 +1632,7 @@ int main()
         cout << " You Died!" << endl;
         cout << " You Lose! Would you like to try again?(y/n)";
         game_setting.index = 0;
+        sleep(2);
         char command = getUserInput();
         if (command != 'y' && command != 'Y' && command != 'n' && command != 'N')
         {
