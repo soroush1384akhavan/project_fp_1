@@ -15,6 +15,8 @@
 
 using namespace std;
 
+int count_m = 0;
+
 void Header();
 char getUserInput();
 class Gun;
@@ -830,7 +832,7 @@ public:
 //     }
 
 //     void resume(){
-        
+
 //     }
 //     void newGame(){
 
@@ -1040,10 +1042,12 @@ public:
         }
         else if (step == 'n')
         {
-            if(index == 0){
+            if (index == 0)
+            {
                 // Header();
             }
-            else{
+            else
+            {
                 // back to game
             }
         }
@@ -1102,12 +1106,39 @@ void load(Game_board &game_board)
                 saved.ignore();
             }
         }
+        for (int i = 0; i < game_board.level.levelNumber; ++i)
+        {
+            saved >> game_board.Vaccines[i].is_recive; // خواندن وضعیت فعال بودن
+            if (!game_board.Vaccines[i].is_recive)
+            {
+                saved >> game_board.Vaccines[i].x >> game_board.Vaccines[i].y;
+            }
+            else
+            {
+                saved.ignore();
+            }
+        }
+        for (int i = 0; i < game_board.level.levelNumber; ++i)
+        {
+            saved >> game_board.ammo_Boxes[i].isRecive; // خواندن وضعیت فعال بودن
+            if (!game_board.ammo_Boxes[i].isRecive)
+            {
+                saved >> game_board.ammo_Boxes[i].x >> game_board.ammo_Boxes[i].y;
+            }
+            else
+            {
+                saved.ignore();
+            }
+        }
 
         saved.close();
-        cout << "\033[" << 10 << ";" << 25 << "H";
-        cout << "Game loading...";
-        sleep(3);
-        // پاک کردن پیام پس از تأخیر
+        if (count_m == 0)
+        {
+            cout << "\033[" << 10 << ";" << 25 << "H";
+            cout << "Game loading...";
+            sleep(3);
+            // پاک کردن پیام پس از تأخیر
+        }
     }
 }
 
@@ -1145,27 +1176,51 @@ public:
     {
         // Game_board gameboard;
         Game_Setting game_Setting;
-
-        cout << "𝟙-𝕟𝕖𝕨 𝕘𝕒𝕞𝕖" << endl;
+        if (count_m == 0)
+            cout << "𝟙-𝕟𝕖𝕨 𝕘𝕒𝕞𝕖" << endl;
+        else
+        {
+            cout << "𝟙-ℝ𝕖𝕤𝕦𝕞𝕖" << endl;
+        }
         cout << "𝟚-𝕣𝕖𝕤𝕦𝕞𝕖" << endl;
         cout << "𝟛-𝕊𝕖𝕥𝕥𝕚𝕟𝕘𝕤" << endl;
         cout << "𝟜-ℂ𝕣𝕖𝕕𝕚𝕥𝕤" << endl;
         cout << "𝟝-ℍ𝕖𝕝𝕡" << endl;
         cout << "𝟞-𝔼𝕩𝕚𝕥" << endl;
         int userInput = getUserInput();
-
+        if (userInput != 1 && userInput != 2 && userInput != 3 && userInput != 4 && userInput != 5 && userInput != 6)
+        {
+            while (userInput != 1 && userInput != 2 && userInput != 3 && userInput != 4 && userInput != 5 && userInput != 6)
+            {
+                cout << "\033[" << 26 << ";" << 45 << "H";
+                cout << "Please just enter the numbers in the menu: ";
+                sleep(1);
+                cout << "\033[" << 26 << ";" << 45 << "H";
+                cout << "                                            ";
+                cout << "\033[" << 25 << ";" << 1 << "H";
+                userInput = getUserInput();
+            }
+        }
         if (userInput == 1)
         {
-            game_board.print_Game_board();
-            game_Setting.index =1;
-            // startSound();
+            if (count_m == 0)
+            {
+                game_board.print_Game_board();
+                game_Setting.index = 1;
+                // startSound();
+            }
+            else
+            {
+                load(game_board);
+                game_board.print_Game_board();
+            }
         }
         else if (userInput == 2)
         {
             // startSound();
             load(game_board);
             game_board.print_Game_board();
-            game_Setting.index =1;
+            game_Setting.index = 1;
         }
         else if (userInput == 3)
         {
@@ -1176,6 +1231,36 @@ public:
         {
             // menuSound();
             Game_credit();
+        }
+        else if (userInput == 6)
+        {
+            cout << "Are you sure you want to exit the game? (y/n) ";
+            char userInput_u;
+            userInput_u = getch();
+            if (userInput_u != 'n' && userInput_u != 'y' && userInput_u != 'Y' && userInput_u != 'N')
+            {
+                while (userInput_u != 'n' && userInput_u != 'y' && userInput_u != 'Y' && userInput_u != 'N')
+                {
+                    cout << "\033[" << 26 << ";" << 45 << "H";
+                    cout << "Please just enter y or n: ";
+                    sleep(1);
+                    cout << "\033[" << 26 << ";" << 45 << "H";
+                    cout << "                                            ";
+                    cout << "\033[" << 25 << ";" << 1 << "H";
+                    userInput_u = getch();
+                }
+            }
+            if (userInput_u == 'y' || userInput_u == 'Y')
+            {
+                exit(0);
+            }
+            else
+            {
+                Clear_scr();
+                printHeader();
+                Options(game_board);
+                cout << "\033[" << 20 << ";" << 1 << "H";
+            }
         }
     }
 
@@ -1267,15 +1352,36 @@ void save(Game_board &game_board)
         }
     }
 
+    for (int i = 0; i < game_board.level.levelNumber; ++i)
+    {
+        save << game_board.Vaccines[i].is_recive << endl;
+        if (!game_board.Vaccines[i].is_recive)
+        {
+            save << game_board.Vaccines[i].x << " " << game_board.Vaccines[i].y << endl;
+        }
+    }
+
+    for (int i = 0; i < game_board.level.levelNumber; ++i)
+    {
+        save << game_board.ammo_Boxes[i].isRecive << endl;
+        if (!game_board.ammo_Boxes[i].isRecive)
+        {
+            save << game_board.ammo_Boxes[i].x << " " << game_board.ammo_Boxes[i].y << endl;
+        }
+    }
+
     // بستن فایل
     save.close();
     cout << "\033[" << 10 << ";" << 25 << "H";
-    cout << "Game saving...";
-    sleep(3);
-    // پاک کردن پیام پس از تأخیر
-    cout << "\033[" << 10 << ";" << 17 << "H";
-    cout << "                          ";
-    cout << "\033[" << 20 << ";" << 1 << "H";
+    if (count_m == 0)
+    {
+        cout << "Game saving...";
+        sleep(3);
+        // پاک کردن پیام پس از تأخیر
+        cout << "\033[" << 10 << ";" << 17 << "H";
+        cout << "                          ";
+        cout << "\033[" << 20 << ";" << 1 << "H";
+    }
 }
 
 int main()
@@ -1320,7 +1426,16 @@ int main()
         }
         if (userInput == 'e' || userInput == 'E')
         {
-            // save and exit
+            cout << "Are you sure you want to exit the game? (y/n) ";
+            char userInput_u;
+            userInput_u = getUserInput();
+            if (userInput_u == 'y')
+            {
+                return 0;
+            }
+            else
+            {
+            }
         }
 
         if (count % 2 == 0)
@@ -1368,36 +1483,9 @@ int main()
         }
         if (userInput == 'm' || userInput == 'M')
         {
-            // game_board.showmenu.printMenu();
-            char userInput_m = getUserInput();
-            if (userInput_m != '0' && userInput_m != '1' && userInput_m != '2' && userInput_m != '3')
-            {
-                while (userInput_m != '0' && userInput_m != '1' && userInput_m != '2' && userInput_m != '3')
-                {
-                    cout << "\033[" << 6 << ";" << 0 << "H";
-                    cout << "Please just enter the numbers in the menu: ";
-                    userInput_m = getUserInput();
-                }
-            }
-            if(userInput_m == 0)
-            {
-                load(game_board);
-            }
-            if(userInput == 1)
-            {
-                // reset data
-                // game_board.print_Game_board();
-                // game_setting.index =1;
-                // startSound();
-            }
-            if(userInput == 2)
-            {
-                // game_setting.Setting();
-            }
-            if(userInput == 3)
-            {
-                // exit game
-            }
+            count_m++;
+            save(game_board);
+            main();
         }
 
         if (win(game_board))
@@ -1439,10 +1527,31 @@ int main()
     {
         cout << " You Died!" << endl;
         cout << " You Lose! Would you like to try again?(y/n)";
-        game_setting.index =0;
+        game_setting.index = 0;
         char command = getUserInput();
+        if (command != 'y' && command != 'Y' && command != 'n' && command != 'N')
+        {
+            while (command != 'y' && command != 'Y' && command != 'n' && command != 'N')
+            {
+                cout << "\033[" << 21 << ";" << 46 << "H";
+                cout << "pleas just enter y or n .";
+                sleep(1);
+                // پاک کردن پیام پس از تأخیر
+                cout << "\033[" << 21 << ";" << 46 << "H";
+                cout << "                                   ";
+                cout << "\033[" << 22 << ";" << 1 << "H";
+                command = getch();
+            }
+        }
         if (command == 'y' || command == 'Y')
         {
+            main();
+        }
+
+        else
+        {
+            Clear_scr();
+            return 0;
         }
     }
     // loseSound();
