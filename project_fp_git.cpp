@@ -1,7 +1,10 @@
 #include <iostream>
 #include <string>
 #include <cstdlib>
+#include <chrono>
+#include <thread>
 #include <fstream>
+#include <cmath>
 #include <ctime>
 #include <unistd.h>
 #include <windows.h>
@@ -845,6 +848,27 @@ public:
 //     }
 // };
 
+class Timer
+{
+private:
+    std::chrono::high_resolution_clock::time_point start_time;
+
+public:
+    Timer() : start_time(std::chrono::high_resolution_clock::now()) {}
+
+    double elapsed() const
+    {
+        return std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - start_time).count();
+    }
+
+    void setSeconds(double seconds)
+    {
+        start_time = std::chrono::time_point_cast<std::chrono::high_resolution_clock::duration>(
+            std::chrono::high_resolution_clock::now() - std::chrono::duration<double>(seconds)
+        );
+    }
+};
+
 class Game_board
 {
 public:
@@ -894,6 +918,8 @@ public:
         }
     }
 
+    Timer timer; // تعریف یک نمونه از کلاس Timer برای استفاده در سرتاسر برنامه
+
     void print_Game_board()
     {
         Clear_scr();
@@ -920,7 +946,7 @@ public:
         {
             cout << "-";
         }
-        // Use the member variable player instead of creating a local Player object
+
         player.display();
         door.display();
 
@@ -967,6 +993,21 @@ public:
                     break;
                 }
             }
+        }
+        if (static_cast<int>(timer.elapsed()) < 60)
+        {
+            cout << "\033[" << 10 << ";" << 45 << "H";
+            cout << "Time you have been playing : " << static_cast<int>(timer.elapsed()) << " second" << endl;
+            cout << "\033[" << 20 << ";" << 1 << "H";
+        }
+        else
+        {
+            int elapsed_seconds = static_cast<int>(timer.elapsed());
+            int min = elapsed_seconds / 60;
+            int sec = elapsed_seconds % 60;
+            cout << "\033[" << 10 << ";" << 45 << "H";
+            cout << "Time you have been playing : " << min << " minute and " << sec << " second" << endl;
+            cout << "\033[" << 20 << ";" << 1 << "H";
         }
     }
     bool is_same_position(Zombie &zombie_1, Zombie &zombie_2, int index_1, int index_2)
@@ -1130,6 +1171,12 @@ void load(Game_board &game_board)
                 saved.ignore();
             }
         }
+
+        // خواندن زمان از فایل
+        int elapsed_seconds;
+        saved >> elapsed_seconds;
+        //game_board.timer.reset();                                          // تنظیم مجدد تایمر
+        game_board.timer.setSeconds(static_cast<double>(elapsed_seconds)); // تنظیم زمان خوانده شده به تایمر
 
         saved.close();
         if (count_m == 0)
@@ -1370,6 +1417,8 @@ void save(Game_board &game_board)
         }
     }
 
+    save << static_cast<int>(game_board.timer.elapsed()) << endl;
+
     // بستن فایل
     save.close();
     cout << "\033[" << 10 << ";" << 25 << "H";
@@ -1549,7 +1598,7 @@ int main()
             {
                 Clear_scr();
                 cout << "\033[" << 21 << ";" << 46 << "H";
-                cout << "The game will restart in "<< i <<" seconds";
+                cout << "The game will restart in " << i << " seconds";
                 sleep(1);
             }
             count_m = 0;
