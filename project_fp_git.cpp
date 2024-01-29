@@ -1374,24 +1374,28 @@ bool lose(Game_board &game_board)
 
 bool win(Game_board game_board)
 {
+    int count_v = 0;
     if (game_board.player.x == game_board.door.x && game_board.player.y == game_board.door.y)
     {
-        for (int i = 0; i < game_board.level.levelNumber; i++)
+        for (int i = 0; i < (game_board.level.levelNumber); i++)
         {
             if (game_board.Vaccines[i].is_recive)
-                return true;
-            else
             {
-                cout << "\033[" << 10 << ";" << 25 << "H";
-                cout << "First get all the vaccine.";
-                sleep(1);
-                // پاک کردن پیام پس از تأخیر
-                cout << "\033[" << 10 << ";" << 17 << "H";
-                cout << "                          ";
-                cout << "\033[" << 20 << ";" << 1 << "H";
-                break;
+                count_v++;
+                if (count_v == game_board.level.levelNumber)
+                {
+                    return true;
+                }
             }
         }
+
+        cout << "\033[" << 10 << ";" << 25 << "H";
+        cout << "First get all the vaccine.";
+        sleep(1);
+        // پاک کردن پیام پس از تأخیر
+        cout << "\033[" << 10 << ";" << 17 << "H";
+        cout << "                          ";
+        cout << "\033[" << 20 << ";" << 1 << "H";
     }
     return false;
 }
