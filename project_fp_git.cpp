@@ -1155,7 +1155,6 @@ public:
 
 void Game_credit(Game_board &game_board)
 {
-    Game_board game_board;
     Clear_scr();
     cout << "created by :" << endl;
     cout << "Soroush Akhavan , Amirmohammad Amrayi";
