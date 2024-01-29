@@ -654,7 +654,7 @@ public:
                 cout << "\033[" << 10 << ";" << 25 << "H";
                 cout << "Reloading!";
                 sleep(1);
-                // پاک کردن پیام پس از تأخیر
+
                 cout << "\033[" << 10 << ";" << 17 << "H";
                 cout << "                          ";
                 cout << "\033[" << 20 << ";" << 1 << "H";
@@ -665,7 +665,7 @@ public:
                 cout << "\033[" << 10 << ";" << 25 << "H";
                 cout << "The gun is already Charged";
                 sleep(1);
-                // پاک کردن پیام پس از تأخیر
+
                 cout << "\033[" << 10 << ";" << 17 << "H";
                 cout << "                          ";
                 cout << "\033[" << 20 << ";" << 1 << "H";
@@ -1545,6 +1545,14 @@ int main()
         }
         if (command == 'y' || command == 'Y')
         {
+            for (int i = 5; i > 0; i--)
+            {
+                Clear_scr();
+                cout << "\033[" << 21 << ";" << 46 << "H";
+                cout << "The game will restart in "<< i <<" seconds";
+                sleep(1);
+            }
+            count_m = 0;
             main();
         }
 
