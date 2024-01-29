@@ -1,7 +1,10 @@
 #include <iostream>
 #include <string>
 #include <cstdlib>
+#include <chrono>
+#include <thread>
 #include <fstream>
+#include <cmath>
 #include <ctime>
 #include <unistd.h>
 #include <windows.h>
@@ -15,10 +18,12 @@
 
 using namespace std;
 
-void Header();
-char getUserInput();
-class Gun;
+int count_m = 0;
 class Game_board;
+void Header(Game_board &) ;
+//char getUserInput();
+//class Gun;
+
 // void load(Game_board);
 // int colectAmmo();
 void Clear_scr()
@@ -467,7 +472,7 @@ public:
             {
                 AmmoNumber--;
                 // fireSound();
-                for (int i = 0; i < Level; i++)
+                for (int i = 0; i <= Level; i++)
                 {
                     if (zombies[i].isActive && zombies[i].x == player.x && 0 <= (player.y - zombies[i].y) && (player.y - zombies[i].y) <= range)
                     {
@@ -507,7 +512,7 @@ public:
             {
                 AmmoNumber--;
                 // fireSound();
-                for (int i = 0; i < Level; i++)
+                for (int i = 0; i <= Level; i++)
                 {
                     if (zombies[i].isActive && zombies[i].x == player.x && 0 <= zombies[i].y - player.y && zombies[i].y - player.y <= range)
                     {
@@ -548,7 +553,7 @@ public:
             {
                 AmmoNumber--;
                 // fireSound();
-                for (int i = 0; i < Level; i++)
+                for (int i = 0; i <= Level; i++)
                 {
                     if (zombies[i].isActive && zombies[i].y == player.y && 0 <= zombies[i].x - player.x && zombies[i].x - player.x <= range)
                     {
@@ -590,7 +595,7 @@ public:
             {
                 AmmoNumber--;
                 // fireSound();
-                for (int i = 0; i < Level; i++)
+                for (int i = 0; i <= Level; i++)
                 {
                     if (zombies[i].isActive && zombies[i].y == player.y && 0 <= player.x - zombies[i].x && player.x - zombies[i].x <= range)
                     {
@@ -652,7 +657,7 @@ public:
                 cout << "\033[" << 10 << ";" << 25 << "H";
                 cout << "Reloading!";
                 sleep(1);
-                // پاک کردن پیام پس از تأخیر
+
                 cout << "\033[" << 10 << ";" << 17 << "H";
                 cout << "                          ";
                 cout << "\033[" << 20 << ";" << 1 << "H";
@@ -663,7 +668,7 @@ public:
                 cout << "\033[" << 10 << ";" << 25 << "H";
                 cout << "The gun is already Charged";
                 sleep(1);
-                // پاک کردن پیام پس از تأخیر
+
                 cout << "\033[" << 10 << ";" << 17 << "H";
                 cout << "                          ";
                 cout << "\033[" << 20 << ";" << 1 << "H";
@@ -798,9 +803,11 @@ public:
         }
     }
 
-    void display(int MagazineSize, int ammonumber, int level, int range, int health)
+    void display(int MagazineSize, int ammonumber, int level, int range, int health, int credit)
     {
         Clear_scr();
+        cout << "\033[" << 6 << ";" << 70 << "H";
+        cout << "Your credit: " << credit;
         cout << "\033[" << 8 << ";" << 45 << "H";
         cout << "0 – Return to game.";
         cout << "\033[" << 10 << ";" << 45 << "H";
@@ -813,8 +820,8 @@ public:
         cout << "(maximum is 10 times, now is " << range << ") ";
         cout << "Credit required: " << (level) + range;
         cout << "\033[" << 14 << ";" << 45 << "H";
-        cout << "3 – get an additional health (maximum is 5 healths, now is" << health;
-        cout << "Credit required: " << (health) * (level + 1);
+        cout << "3 – get an additional health (maximum is 5 healths, now is " << health;
+        cout << " Credit required: " << (health) * (level + 1);
     }
 };
 
@@ -830,7 +837,7 @@ public:
 //     }
 
 //     void resume(){
-        
+
 //     }
 //     void newGame(){
 
@@ -842,6 +849,26 @@ public:
 //         // Header();
 //     }
 // };
+
+class Timer
+{
+private:
+    std::chrono::high_resolution_clock::time_point start_time;
+
+public:
+    Timer() : start_time(std::chrono::high_resolution_clock::now()) {}
+
+    double elapsed() const
+    {
+        return std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - start_time).count();
+    }
+
+    void setSeconds(double seconds)
+    {
+        start_time = std::chrono::time_point_cast<std::chrono::high_resolution_clock::duration>(
+            std::chrono::high_resolution_clock::now() - std::chrono::duration<double>(seconds));
+    }
+};
 
 class Game_board
 {
@@ -892,6 +919,8 @@ public:
         }
     }
 
+    Timer timer; // تعریف یک نمونه از کلاس Timer برای استفاده در سرتاسر برنامه
+
     void print_Game_board()
     {
         Clear_scr();
@@ -918,7 +947,7 @@ public:
         {
             cout << "-";
         }
-        // Use the member variable player instead of creating a local Player object
+
         player.display();
         door.display();
 
@@ -927,13 +956,13 @@ public:
             // zombies[i].setRandomCoordinates();
             for (int j = 0; j < level.levelNumber; j++)
             {
-                if (!is_same_position(zombies[i], zombies[j], i, j))
+                if (!is_same_position(zombies[i], zombies[j], i, j) && (zombies[i].x != 2 || zombies[i].y != 4) && (zombies[i].x != 16 || zombies[i].y != 18))
                 {
                     zombies[i].display();
                 }
                 else
                 {
-                    break;
+                    zombies[j].setRandomCoordinates();
                 }
             }
         }
@@ -942,13 +971,13 @@ public:
         {
             for (int j = 0; j < level.levelNumber; j++)
             {
-                if (!is_same_position_V(Vaccines[i], Vaccines[j], i, j))
+                if (!is_same_position_z_v(zombies[i], Vaccines[j]) && !is_same_position_V(Vaccines[i], Vaccines[j], i, j) && (Vaccines[i].x != 2 || Vaccines[i].y != 4) && (Vaccines[i].x != 16 || Vaccines[i].y != 18))
                 {
                     Vaccines[i].display();
                 }
                 else
                 {
-                    break;
+                    Vaccines[j].setRandomCoordinates();
                 }
             }
         }
@@ -956,17 +985,34 @@ public:
         {
             for (int j = 0; j < level.levelNumber; j++)
             {
-                if (!is_same_position_A(ammo_Boxes[i], ammo_Boxes[j], i, j))
+                if (!is_same_position_v_a(Vaccines[i], ammo_Boxes[j]) && !is_same_position_A(ammo_Boxes[i], ammo_Boxes[j], i, j) && (ammo_Boxes[i].x != 2 || ammo_Boxes[i].y != 4) && (ammo_Boxes[i].x != 16 || ammo_Boxes[i].y != 18))
                 {
                     ammo_Boxes[i].display();
                 }
                 else
                 {
-                    break;
+                    ammo_Boxes[j].setRandomCoordinates();
                 }
             }
         }
+
+        if (static_cast<int>(timer.elapsed()) < 60)
+        {
+            cout << "\033[" << 8 << ";" << 55 << "H";
+            cout << "Time you have been playing : " << static_cast<int>(timer.elapsed()) << " second" << endl;
+            cout << "\033[" << 20 << ";" << 1 << "H";
+        }
+        else
+        {
+            int elapsed_seconds = static_cast<int>(timer.elapsed());
+            int min = elapsed_seconds / 60;
+            int sec = elapsed_seconds % 60;
+            cout << "\033[" << 8 << ";" << 55 << "H";
+            cout << "Time you have been playing : " << min << " minute and " << sec << " second" << endl;
+            cout << "\033[" << 20 << ";" << 1 << "H";
+        }
     }
+
     bool is_same_position(Zombie &zombie_1, Zombie &zombie_2, int index_1, int index_2)
     {
         if (zombie_1.x == zombie_2.x && zombie_1.y == zombie_2.y && index_1 != index_2)
@@ -978,6 +1024,31 @@ public:
             return false;
         }
     }
+
+    bool is_same_position_z_v(Zombie &zombie, Vaccine &vaccine)
+    {
+        if (zombie.x == vaccine.x && zombie.y == vaccine.y)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    bool is_same_position_v_a(Vaccine &vaccine, Ammo_Box &ammo_Boxes)
+    {
+        if (ammo_Boxes.x == vaccine.x && ammo_Boxes.y == vaccine.y)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     bool is_same_position_V(Vaccine &vaccine_1, Vaccine &vaccine_2, int index_1, int index_2)
     {
         if (vaccine_1.x == vaccine_2.x && vaccine_1.y == vaccine_2.y && index_1 != index_2)
@@ -989,6 +1060,7 @@ public:
             return false;
         }
     }
+
     bool is_same_position_A(Ammo_Box &ammo_box_1, Ammo_Box &ammo_box_2, int index_1, int index_2)
     {
         if (ammo_box_1.x == ammo_box_2.x && ammo_box_1.y == ammo_box_2.y && index_1 != index_2)
@@ -1008,7 +1080,7 @@ public:
     bool is_mute = true;
     int index = 0;
 
-    void Setting()
+    void Setting(Game_board &game_board)
     {
         Clear_scr();
         cout << "final level is: 20" << endl;
@@ -1036,14 +1108,16 @@ public:
                 is_mute = true;
             }
 
-            Setting();
+            Setting(game_board);
         }
         else if (step == 'n')
         {
-            if(index == 0){
-                // Header();
+            if (index == 0)
+            {
+                Header(game_board);
             }
-            else{
+            else
+            {
                 // back to game
             }
         }
@@ -1102,12 +1176,45 @@ void load(Game_board &game_board)
                 saved.ignore();
             }
         }
+        for (int i = 0; i < game_board.level.levelNumber; ++i)
+        {
+            saved >> game_board.Vaccines[i].is_recive; // خواندن وضعیت فعال بودن
+            if (!game_board.Vaccines[i].is_recive)
+            {
+                saved >> game_board.Vaccines[i].x >> game_board.Vaccines[i].y;
+            }
+            else
+            {
+                saved.ignore();
+            }
+        }
+        for (int i = 0; i < game_board.level.levelNumber; ++i)
+        {
+            saved >> game_board.ammo_Boxes[i].isRecive; // خواندن وضعیت فعال بودن
+            if (!game_board.ammo_Boxes[i].isRecive)
+            {
+                saved >> game_board.ammo_Boxes[i].x >> game_board.ammo_Boxes[i].y;
+            }
+            else
+            {
+                saved.ignore();
+            }
+        }
+
+        // خواندن زمان از فایل
+        int elapsed_seconds;
+        saved >> elapsed_seconds;
+        // game_board.timer.reset();                                          // تنظیم مجدد تایمر
+        game_board.timer.setSeconds(static_cast<double>(elapsed_seconds)); // تنظیم زمان خوانده شده به تایمر
 
         saved.close();
-        cout << "\033[" << 10 << ";" << 25 << "H";
-        cout << "Game loading...";
-        sleep(3);
-        // پاک کردن پیام پس از تأخیر
+        if (count_m == 0)
+        {
+            cout << "\033[" << 10 << ";" << 25 << "H";
+            cout << "Game loading...";
+            sleep(3);
+            // پاک کردن پیام پس از تأخیر
+        }
     }
 }
 
@@ -1145,37 +1252,91 @@ public:
     {
         // Game_board gameboard;
         Game_Setting game_Setting;
-
-        cout << "𝟙-𝕟𝕖𝕨 𝕘𝕒𝕞𝕖" << endl;
+        if (count_m == 0)
+            cout << "𝟙-𝕟𝕖𝕨 𝕘𝕒𝕞𝕖" << endl;
+        else
+        {
+            cout << "𝟙-ℝ𝕖𝕤𝕦𝕞𝕖" << endl;
+        }
         cout << "𝟚-𝕣𝕖𝕤𝕦𝕞𝕖" << endl;
         cout << "𝟛-𝕊𝕖𝕥𝕥𝕚𝕟𝕘𝕤" << endl;
         cout << "𝟜-ℂ𝕣𝕖𝕕𝕚𝕥𝕤" << endl;
         cout << "𝟝-ℍ𝕖𝕝𝕡" << endl;
         cout << "𝟞-𝔼𝕩𝕚𝕥" << endl;
         int userInput = getUserInput();
-
+        if (userInput != 1 && userInput != 2 && userInput != 3 && userInput != 4 && userInput != 5 && userInput != 6)
+        {
+            while (userInput != 1 && userInput != 2 && userInput != 3 && userInput != 4 && userInput != 5 && userInput != 6)
+            {
+                cout << "\033[" << 26 << ";" << 45 << "H";
+                cout << "Please just enter the numbers in the menu: ";
+                sleep(1);
+                cout << "\033[" << 26 << ";" << 45 << "H";
+                cout << "                                            ";
+                cout << "\033[" << 25 << ";" << 1 << "H";
+                userInput = getUserInput();
+            }
+        }
         if (userInput == 1)
         {
-            game_board.print_Game_board();
-            game_Setting.index =1;
-            // startSound();
+            if (count_m == 0)
+            {
+                game_board.print_Game_board();
+                game_Setting.index = 1;
+                // startSound();
+            }
+            else
+            {
+                load(game_board);
+                game_board.print_Game_board();
+            }
         }
         else if (userInput == 2)
         {
             // startSound();
             load(game_board);
             game_board.print_Game_board();
-            game_Setting.index =1;
+            game_Setting.index = 1;
         }
         else if (userInput == 3)
         {
             // menuSound();
-            game_Setting.Setting();
+            game_Setting.Setting(game_board);
         }
         else if (userInput == 4)
         {
             // menuSound();
             Game_credit();
+        }
+        else if (userInput == 6)
+        {
+            cout << "Are you sure you want to exit the game? (y/n) ";
+            char userInput_u;
+            userInput_u = getch();
+            if (userInput_u != 'n' && userInput_u != 'y' && userInput_u != 'Y' && userInput_u != 'N')
+            {
+                while (userInput_u != 'n' && userInput_u != 'y' && userInput_u != 'Y' && userInput_u != 'N')
+                {
+                    cout << "\033[" << 26 << ";" << 45 << "H";
+                    cout << "Please just enter y or n: ";
+                    sleep(1);
+                    cout << "\033[" << 26 << ";" << 45 << "H";
+                    cout << "                                            ";
+                    cout << "\033[" << 25 << ";" << 1 << "H";
+                    userInput_u = getch();
+                }
+            }
+            if (userInput_u == 'y' || userInput_u == 'Y')
+            {
+                exit(0);
+            }
+            else
+            {
+                Clear_scr();
+                printHeader();
+                Options(game_board);
+                cout << "\033[" << 20 << ";" << 1 << "H";
+            }
         }
     }
 
@@ -1266,15 +1427,38 @@ void save(Game_board &game_board)
         }
     }
 
+    for (int i = 0; i < game_board.level.levelNumber; ++i)
+    {
+        save << game_board.Vaccines[i].is_recive << endl;
+        if (!game_board.Vaccines[i].is_recive)
+        {
+            save << game_board.Vaccines[i].x << " " << game_board.Vaccines[i].y << endl;
+        }
+    }
+
+    for (int i = 0; i < game_board.level.levelNumber; ++i)
+    {
+        save << game_board.ammo_Boxes[i].isRecive << endl;
+        if (!game_board.ammo_Boxes[i].isRecive)
+        {
+            save << game_board.ammo_Boxes[i].x << " " << game_board.ammo_Boxes[i].y << endl;
+        }
+    }
+
+    save << static_cast<int>(game_board.timer.elapsed()) << endl;
+
     // بستن فایل
     save.close();
     cout << "\033[" << 10 << ";" << 25 << "H";
-    cout << "Game saving...";
-    sleep(3);
-    // پاک کردن پیام پس از تأخیر
-    cout << "\033[" << 10 << ";" << 17 << "H";
-    cout << "                          ";
-    cout << "\033[" << 20 << ";" << 1 << "H";
+    if (count_m == 0)
+    {
+        cout << "Game saving...";
+        sleep(3);
+        // پاک کردن پیام پس از تأخیر
+        cout << "\033[" << 10 << ";" << 17 << "H";
+        cout << "                          ";
+        cout << "\033[" << 20 << ";" << 1 << "H";
+    }
 }
 
 int main()
@@ -1319,7 +1503,16 @@ int main()
         }
         if (userInput == 'e' || userInput == 'E')
         {
-            // save and exit
+            cout << "Are you sure you want to exit the game? (y/n) ";
+            char userInput_u;
+            userInput_u = getUserInput();
+            if (userInput_u == 'y')
+            {
+                return 0;
+            }
+            else
+            {
+            }
         }
 
         if (count % 2 == 0)
@@ -1334,7 +1527,7 @@ int main()
 
         if (userInput == 'u' || userInput == 'U')
         {
-            game_board.upgrade.display(game_board.gun.MagazineSize, game_board.gun.AmmoNumber, game_board.level.levelNumber, game_board.gun.range, game_board.health.HealthNumber);
+            game_board.upgrade.display(game_board.gun.MagazineSize, game_board.gun.AmmoNumber, game_board.level.levelNumber, game_board.gun.range, game_board.health.HealthNumber, game_board.credit.CreditNumber);
             char userInput_u = getUserInput();
             if (userInput_u != '0' && userInput_u != '1' && userInput_u != '2' && userInput_u != '3')
             {
@@ -1347,7 +1540,8 @@ int main()
             }
             if (userInput_u == '0')
             {
-                continue;
+                Clear_scr();
+                game_board.print_Game_board();
             }
 
             if (userInput_u == '1')
@@ -1367,36 +1561,9 @@ int main()
         }
         if (userInput == 'm' || userInput == 'M')
         {
-            // game_board.showmenu.printMenu();
-            char userInput_m = getUserInput();
-            if (userInput_m != '0' && userInput_m != '1' && userInput_m != '2' && userInput_m != '3')
-            {
-                while (userInput_m != '0' && userInput_m != '1' && userInput_m != '2' && userInput_m != '3')
-                {
-                    cout << "\033[" << 6 << ";" << 0 << "H";
-                    cout << "Please just enter the numbers in the menu: ";
-                    userInput_m = getUserInput();
-                }
-            }
-            if(userInput_m == 0)
-            {
-                load(game_board);
-            }
-            if(userInput == 1)
-            {
-                // reset data
-                // game_board.print_Game_board();
-                // game_setting.index =1;
-                // startSound();
-            }
-            if(userInput == 2)
-            {
-                // game_setting.Setting();
-            }
-            if(userInput == 3)
-            {
-                // exit game
-            }
+            count_m++;
+            save(game_board);
+            main();
         }
 
         if (win(game_board))
@@ -1438,10 +1605,39 @@ int main()
     {
         cout << " You Died!" << endl;
         cout << " You Lose! Would you like to try again?(y/n)";
-        game_setting.index =0;
+        game_setting.index = 0;
         char command = getUserInput();
+        if (command != 'y' && command != 'Y' && command != 'n' && command != 'N')
+        {
+            while (command != 'y' && command != 'Y' && command != 'n' && command != 'N')
+            {
+                cout << "\033[" << 21 << ";" << 46 << "H";
+                cout << "pleas just enter y or n .";
+                sleep(1);
+                // پاک کردن پیام پس از تأخیر
+                cout << "\033[" << 21 << ";" << 46 << "H";
+                cout << "                                   ";
+                cout << "\033[" << 22 << ";" << 1 << "H";
+                command = getch();
+            }
+        }
         if (command == 'y' || command == 'Y')
         {
+            for (int i = 5; i > 0; i--)
+            {
+                Clear_scr();
+                cout << "\033[" << 21 << ";" << 46 << "H";
+                cout << "The game will restart in " << i << " seconds";
+                sleep(1);
+            }
+            count_m = 0;
+            main();
+        }
+
+        else
+        {
+            Clear_scr();
+            return 0;
         }
     }
     // loseSound();
