@@ -1240,7 +1240,6 @@ void Header(Game_board &game_board) // نمایش منوی اصلی بازی
 // int colectAmmo(Gun &gun){
 //     gun.AmmoMagazine++;
 // }
-
 void save(Game_board &game_board)
 {
     ofstream save("save_file.txt", ios::out);
