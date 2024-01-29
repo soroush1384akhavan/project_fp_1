@@ -19,11 +19,11 @@
 using namespace std;
 
 int count_m = 0;
-
-void Header();
-char getUserInput();
-class Gun;
 class Game_board;
+void Header(Game_board &) ;
+//char getUserInput();
+//class Gun;
+
 // void load(Game_board);
 // int colectAmmo();
 void Clear_scr()
@@ -472,7 +472,7 @@ public:
             {
                 AmmoNumber--;
                 // fireSound();
-                for (int i = 0; i < Level; i++)
+                for (int i = 0; i <= Level; i++)
                 {
                     if (zombies[i].isActive && zombies[i].x == player.x && 0 <= (player.y - zombies[i].y) && (player.y - zombies[i].y) <= range)
                     {
@@ -512,7 +512,7 @@ public:
             {
                 AmmoNumber--;
                 // fireSound();
-                for (int i = 0; i < Level; i++)
+                for (int i = 0; i <= Level; i++)
                 {
                     if (zombies[i].isActive && zombies[i].x == player.x && 0 <= zombies[i].y - player.y && zombies[i].y - player.y <= range)
                     {
@@ -553,7 +553,7 @@ public:
             {
                 AmmoNumber--;
                 // fireSound();
-                for (int i = 0; i < Level; i++)
+                for (int i = 0; i <= Level; i++)
                 {
                     if (zombies[i].isActive && zombies[i].y == player.y && 0 <= zombies[i].x - player.x && zombies[i].x - player.x <= range)
                     {
@@ -595,7 +595,7 @@ public:
             {
                 AmmoNumber--;
                 // fireSound();
-                for (int i = 0; i < Level; i++)
+                for (int i = 0; i <= Level; i++)
                 {
                     if (zombies[i].isActive && zombies[i].y == player.y && 0 <= player.x - zombies[i].x && player.x - zombies[i].x <= range)
                     {
@@ -803,9 +803,11 @@ public:
         }
     }
 
-    void display(int MagazineSize, int ammonumber, int level, int range, int health)
+    void display(int MagazineSize, int ammonumber, int level, int range, int health, int credit)
     {
         Clear_scr();
+        cout << "\033[" << 6 << ";" << 70 << "H";
+        cout << "Your credit: " << credit;
         cout << "\033[" << 8 << ";" << 45 << "H";
         cout << "0 – Return to game.";
         cout << "\033[" << 10 << ";" << 45 << "H";
@@ -818,8 +820,8 @@ public:
         cout << "(maximum is 10 times, now is " << range << ") ";
         cout << "Credit required: " << (level) + range;
         cout << "\033[" << 14 << ";" << 45 << "H";
-        cout << "3 – get an additional health (maximum is 5 healths, now is" << health;
-        cout << "Credit required: " << (health) * (level + 1);
+        cout << "3 – get an additional health (maximum is 5 healths, now is " << health;
+        cout << " Credit required: " << (health) * (level + 1);
     }
 };
 
@@ -864,8 +866,7 @@ public:
     void setSeconds(double seconds)
     {
         start_time = std::chrono::time_point_cast<std::chrono::high_resolution_clock::duration>(
-            std::chrono::high_resolution_clock::now() - std::chrono::duration<double>(seconds)
-        );
+            std::chrono::high_resolution_clock::now() - std::chrono::duration<double>(seconds));
     }
 };
 
@@ -955,13 +956,13 @@ public:
             // zombies[i].setRandomCoordinates();
             for (int j = 0; j < level.levelNumber; j++)
             {
-                if (!is_same_position(zombies[i], zombies[j], i, j))
+                if (!is_same_position(zombies[i], zombies[j], i, j) && (zombies[i].x != 2 || zombies[i].y != 4) && (zombies[i].x != 16 || zombies[i].y != 18))
                 {
                     zombies[i].display();
                 }
                 else
                 {
-                    break;
+                    zombies[j].setRandomCoordinates();
                 }
             }
         }
@@ -970,13 +971,13 @@ public:
         {
             for (int j = 0; j < level.levelNumber; j++)
             {
-                if (!is_same_position_V(Vaccines[i], Vaccines[j], i, j))
+                if (!is_same_position_z_v(zombies[i], Vaccines[j]) && !is_same_position_V(Vaccines[i], Vaccines[j], i, j) && (Vaccines[i].x != 2 || Vaccines[i].y != 4) && (Vaccines[i].x != 16 || Vaccines[i].y != 18))
                 {
                     Vaccines[i].display();
                 }
                 else
                 {
-                    break;
+                    Vaccines[j].setRandomCoordinates();
                 }
             }
         }
@@ -984,19 +985,20 @@ public:
         {
             for (int j = 0; j < level.levelNumber; j++)
             {
-                if (!is_same_position_A(ammo_Boxes[i], ammo_Boxes[j], i, j))
+                if (!is_same_position_v_a(Vaccines[i], ammo_Boxes[j]) && !is_same_position_A(ammo_Boxes[i], ammo_Boxes[j], i, j) && (ammo_Boxes[i].x != 2 || ammo_Boxes[i].y != 4) && (ammo_Boxes[i].x != 16 || ammo_Boxes[i].y != 18))
                 {
                     ammo_Boxes[i].display();
                 }
                 else
                 {
-                    break;
+                    ammo_Boxes[j].setRandomCoordinates();
                 }
             }
         }
+
         if (static_cast<int>(timer.elapsed()) < 60)
         {
-            cout << "\033[" << 10 << ";" << 45 << "H";
+            cout << "\033[" << 8 << ";" << 55 << "H";
             cout << "Time you have been playing : " << static_cast<int>(timer.elapsed()) << " second" << endl;
             cout << "\033[" << 20 << ";" << 1 << "H";
         }
@@ -1005,11 +1007,12 @@ public:
             int elapsed_seconds = static_cast<int>(timer.elapsed());
             int min = elapsed_seconds / 60;
             int sec = elapsed_seconds % 60;
-            cout << "\033[" << 10 << ";" << 45 << "H";
+            cout << "\033[" << 8 << ";" << 55 << "H";
             cout << "Time you have been playing : " << min << " minute and " << sec << " second" << endl;
             cout << "\033[" << 20 << ";" << 1 << "H";
         }
     }
+
     bool is_same_position(Zombie &zombie_1, Zombie &zombie_2, int index_1, int index_2)
     {
         if (zombie_1.x == zombie_2.x && zombie_1.y == zombie_2.y && index_1 != index_2)
@@ -1021,6 +1024,31 @@ public:
             return false;
         }
     }
+
+    bool is_same_position_z_v(Zombie &zombie, Vaccine &vaccine)
+    {
+        if (zombie.x == vaccine.x && zombie.y == vaccine.y)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    bool is_same_position_v_a(Vaccine &vaccine, Ammo_Box &ammo_Boxes)
+    {
+        if (ammo_Boxes.x == vaccine.x && ammo_Boxes.y == vaccine.y)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     bool is_same_position_V(Vaccine &vaccine_1, Vaccine &vaccine_2, int index_1, int index_2)
     {
         if (vaccine_1.x == vaccine_2.x && vaccine_1.y == vaccine_2.y && index_1 != index_2)
@@ -1032,6 +1060,7 @@ public:
             return false;
         }
     }
+
     bool is_same_position_A(Ammo_Box &ammo_box_1, Ammo_Box &ammo_box_2, int index_1, int index_2)
     {
         if (ammo_box_1.x == ammo_box_2.x && ammo_box_1.y == ammo_box_2.y && index_1 != index_2)
@@ -1051,7 +1080,7 @@ public:
     bool is_mute = true;
     int index = 0;
 
-    void Setting()
+    void Setting(Game_board &game_board)
     {
         Clear_scr();
         cout << "final level is: 20" << endl;
@@ -1079,13 +1108,13 @@ public:
                 is_mute = true;
             }
 
-            Setting();
+            Setting(game_board);
         }
         else if (step == 'n')
         {
             if (index == 0)
             {
-                // Header();
+                Header(game_board);
             }
             else
             {
@@ -1175,7 +1204,7 @@ void load(Game_board &game_board)
         // خواندن زمان از فایل
         int elapsed_seconds;
         saved >> elapsed_seconds;
-        //game_board.timer.reset();                                          // تنظیم مجدد تایمر
+        // game_board.timer.reset();                                          // تنظیم مجدد تایمر
         game_board.timer.setSeconds(static_cast<double>(elapsed_seconds)); // تنظیم زمان خوانده شده به تایمر
 
         saved.close();
@@ -1272,7 +1301,7 @@ public:
         else if (userInput == 3)
         {
             // menuSound();
-            game_Setting.Setting();
+            game_Setting.Setting(game_board);
         }
         else if (userInput == 4)
         {
@@ -1499,7 +1528,7 @@ int main()
 
         if (userInput == 'u' || userInput == 'U')
         {
-            game_board.upgrade.display(game_board.gun.MagazineSize, game_board.gun.AmmoNumber, game_board.level.levelNumber, game_board.gun.range, game_board.health.HealthNumber);
+            game_board.upgrade.display(game_board.gun.MagazineSize, game_board.gun.AmmoNumber, game_board.level.levelNumber, game_board.gun.range, game_board.health.HealthNumber, game_board.credit.CreditNumber);
             char userInput_u = getUserInput();
             if (userInput_u != '0' && userInput_u != '1' && userInput_u != '2' && userInput_u != '3')
             {
@@ -1512,7 +1541,8 @@ int main()
             }
             if (userInput_u == '0')
             {
-                continue;
+                Clear_scr();
+                game_board.print_Game_board();
             }
 
             if (userInput_u == '1')
