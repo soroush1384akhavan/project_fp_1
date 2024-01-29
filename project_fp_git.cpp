@@ -20,9 +20,9 @@ using namespace std;
 
 int count_m = 0;
 class Game_board;
-void Header(Game_board &) ;
-//char getUserInput();
-//class Gun;
+void Header(Game_board &);
+// char getUserInput();
+// class Gun;
 
 // void load(Game_board);
 // int colectAmmo();
@@ -985,7 +985,7 @@ public:
         {
             for (int j = 0; j < level.levelNumber; j++)
             {
-                if (!is_same_position_v_a(Vaccines[i], ammo_Boxes[j]) && !is_same_position_A(ammo_Boxes[i], ammo_Boxes[j], i, j) && (ammo_Boxes[i].x != 2 || ammo_Boxes[i].y != 4) && (ammo_Boxes[i].x != 16 || ammo_Boxes[i].y != 18))
+                if (!is_same_position_z_a(zombies[i], ammo_Boxes[j]) && !is_same_position_v_a(Vaccines[i], ammo_Boxes[j]) && !is_same_position_A(ammo_Boxes[i], ammo_Boxes[j], i, j) && (ammo_Boxes[i].x != 2 || ammo_Boxes[i].y != 4) && (ammo_Boxes[i].x != 16 || ammo_Boxes[i].y != 18))
                 {
                     ammo_Boxes[i].display();
                 }
@@ -1028,6 +1028,18 @@ public:
     bool is_same_position_z_v(Zombie &zombie, Vaccine &vaccine)
     {
         if (zombie.x == vaccine.x && zombie.y == vaccine.y)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    bool is_same_position_z_a(Zombie &zombie, Ammo_Box &ammo_Boxes)
+    {
+        if (zombie.x == ammo_Boxes.x && zombie.y == ammo_Boxes.y)
         {
             return true;
         }
@@ -1132,14 +1144,14 @@ public:
     }
 };
 
-void Game_credit()
+void Game_credit(Game_board &game_board)
 {
     Clear_scr();
     cout << "created by :" << endl;
     cout << "Soroush Akhavan , Amirmohammad Amrayi";
     sleep(5);
     Clear_scr();
-    // Header();
+    Header(game_board);
 }
 
 void load(Game_board &game_board)
@@ -1306,7 +1318,7 @@ public:
         else if (userInput == 4)
         {
             // menuSound();
-            Game_credit();
+            Game_credit(game_board);
         }
         else if (userInput == 6)
         {
@@ -1607,6 +1619,7 @@ int main()
         cout << " You Died!" << endl;
         cout << " You Lose! Would you like to try again?(y/n)";
         game_setting.index = 0;
+        sleep(2);
         char command = getUserInput();
         if (command != 'y' && command != 'Y' && command != 'n' && command != 'N')
         {
