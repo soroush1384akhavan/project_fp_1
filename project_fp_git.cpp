@@ -20,9 +20,9 @@ using namespace std;
 
 int count_m = 0;
 class Game_board;
-void Header(Game_board &) ;
-//char getUserInput();
-//class Gun;
+void Header(Game_board &);
+// char getUserInput();
+// class Gun;
 
 // void load(Game_board);
 // int colectAmmo();
@@ -441,11 +441,20 @@ public:
         }
     }
 
-    void ZombiesCeck(Player &player, int level, int &health)
+    void ZombiesCheck(Player &player, int level, int &health)
     {
         if (abs(x - player.x) <= 1 && abs(y - player.y) <= 1 && isActive)
         {
             health--;
+            cout << "\033[" << 10 << ";" << 25 << "H";
+            cout << "The Zombie is eating you!";
+            cout << "\033[" << 11 << ";" << 25 << "H";
+            cout << "You lost one of your healths!";
+            sleep(1);
+            // پاک کردن پیام پس از تأخیر
+            cout << "\033[" << 10 << ";" << 17 << "H";
+            cout << "                          ";
+            cout << "\033[" << 20 << ";" << 1 << "H";
         }
     }
 };
@@ -1134,12 +1143,13 @@ public:
 
 void Game_credit()
 {
+    Game_board game_board;
     Clear_scr();
     cout << "created by :" << endl;
     cout << "Soroush Akhavan , Amirmohammad Amrayi";
     sleep(5);
     Clear_scr();
-    // Header();
+    Header(game_board);
 }
 
 void load(Game_board &game_board)
@@ -1484,7 +1494,7 @@ int main()
             game_board.player.ammoBoxCheck(game_board.ammo_Boxes, game_board.level.levelNumber, game_board.ammo_Details, game_board.gun.AmmoMagazine);
             for (int i = 0; i < game_board.level.levelNumber; i++)
             {
-                game_board.zombies[i].ZombiesCeck(game_board.player, game_board.level.levelNumber, game_board.health.HealthNumber);
+                game_board.zombies[i].ZombiesCheck(game_board.player, game_board.level.levelNumber, game_board.health.HealthNumber);
             }
         }
         // userInput_shoot = getUserInput_move_shoot(); // دریافت جهت تیر
