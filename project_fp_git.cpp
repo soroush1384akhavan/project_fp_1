@@ -26,8 +26,6 @@ int main();
 // char getUserInput();
 // class Gun;
 
-// void load(Game_board);
-// int colectAmmo();
 void Clear_scr()
 {
     cout << "\033[1;1H"; // Move cursor to the top left corner
@@ -183,7 +181,6 @@ public:
     }
     void setRandomCoordinates()
     {
-        // تنظیم seed یک بار در ابتدای برنامه
         static bool seedSet = false;
         if (!seedSet)
         {
@@ -200,10 +197,10 @@ public:
     {
         if (!is_recive)
         {
-            cout << "\033[" << y << ";" << x << "H"; // Set cursor position
-            cout << "\e[0;33m";                      // ANSI escape code for red color
+            cout << "\033[" << y << ";" << x << "H"; 
+            cout << "\e[0;33m";                      
             cout << "V";
-            cout << "\033[0m"; // Reset color to default
+            cout << "\033[0m"; 
             cout << "\033[" << 20 << ";" << 1 << "H";
         }
     }
@@ -245,10 +242,10 @@ public:
     {
         if (!isRecive)
         {
-            cout << "\033[" << y << ";" << x << "H"; // Set cursor position
-            cout << "\033[36m";                      // ANSI escape code for red color
+            cout << "\033[" << y << ";" << x << "H";
+            cout << "\033[36m";                     
             cout << "A";
-            cout << "\033[0m"; // Reset color to default
+            cout << "\033[0m"; 
             cout << "\033[" << 20 << ";" << 1 << "H";
         }
     }
@@ -333,7 +330,6 @@ public:
                 cout << "\033[" << 10 << ";" << 17 << "H";
                 cout << "                          ";
                 cout << "\033[" << 20 << ";" << 1 << "H";
-                // gun.AmmoMagazine++;
                 break;
             }
         }
@@ -341,11 +337,10 @@ public:
 
     void display()
     {
-        // Set cursor position, change text color to green, and display 'P'
-        cout << "\033[" << y << ";" << x << "H"; // Set cursor position
-        cout << "\033[32m";                      // ANSI escape code for green color
+        cout << "\033[" << y << ";" << x << "H"; 
+        cout << "\033[32m";                      
         cout << "P";
-        cout << "\033[0m"; // Reset color to default
+        cout << "\033[0m"; 
         cout << "\033[" << 20 << ";" << 1 << "H";
     }
 };
@@ -357,7 +352,6 @@ public:
     int y;
     bool isActive;
 
-    // سازنده با مقادیر اولیه
     Zombie()
     {
         setRandomCoordinates();
@@ -383,12 +377,10 @@ public:
     {
         if (isActive)
         {
-            // استفاده از ANSI Escape برای تنظیم رنگ
-
-            cout << "\033[" << y << ";" << x << "H"; // Set cursor position
-            cout << "\033[31m";                      // ANSI escape code for red color
+            cout << "\033[" << y << ";" << x << "H"; 
+            cout << "\033[31m";                     
             cout << "Z";
-            cout << "\033[0m"; // Reset color to default
+            cout << "\033[0m"; 
             cout << "\033[" << 20 << ";" << 1 << "H";
         }
     }
@@ -468,7 +460,7 @@ public:
         }
     }
 };
-// meow
+
 class Gun
 {
 public:
@@ -713,10 +705,10 @@ public:
 
     void display()
     {
-        cout << "\033[" << y << ";" << x << "H"; // Set cursor position
-        cout << "\033[36m";                      // ANSI escape code for red color
+        cout << "\033[" << y << ";" << x << "H"; 
+        cout << "\033[36m";                  
         cout << "D";
-        cout << "\033[0m"; // Reset color to default
+        cout << "\033[0m"; 
         cout << "\033[" << 20 << ";" << 1 << "H";
     }
 };
@@ -769,6 +761,7 @@ public:
             Clear_scr();
             cout << "\033[" << 10 << ";" << 45 << "H";
             cout << "Upgrade done successfully.Your magazine capacity is now  ." << MagazineSize;
+            
         }
         else if (MagazineSize == 7)
         {
@@ -887,7 +880,6 @@ public:
     Door door;
     Gun gun;
     Upgrade upgrade;
-    // ShowMenu showmenu;
     void Details()
     {
         cout << "Level: " << level.levelNumber << " ";
@@ -919,7 +911,7 @@ public:
         }
     }
 
-    Timer timer; // تعریف یک نمونه از کلاس Timer برای استفاده در سرتاسر برنامه
+    Timer timer; 
 
     void print_Game_board()
     {
@@ -953,7 +945,6 @@ public:
 
         for (int i = 0; i < level.levelNumber; i++)
         {
-            // zombies[i].setRandomCoordinates();
             for (int j = 0; j < level.levelNumber; j++)
             {
                 if (!is_same_position(zombies[i], zombies[j], i, j) && (zombies[i].x != 2 || zombies[i].y != 4) && (zombies[i].x != 16 || zombies[i].y != 18))
@@ -1215,10 +1206,9 @@ void load(Game_board &game_board)
         }
 
         // خواندن زمان از فایل
-        // int elapsed_seconds;
-        // saved >> elapsed_seconds;
-        // game_board.timer.reset();                                          // تنظیم مجدد تایمر
-        // game_board.timer.setSeconds(static_cast<double>(elapsed_seconds)); // تنظیم زمان خوانده شده به تایمر
+         int elapsed_seconds;
+         saved >> elapsed_seconds;
+         game_board.timer.setSeconds(static_cast<double>(elapsed_seconds)); // تنظیم زمان خوانده شده به تایمر
 
         saved.close();
         if (count_m == 0)
@@ -1226,7 +1216,6 @@ void load(Game_board &game_board)
             cout << "\033[" << 10 << ";" << 25 << "H";
             cout << "Game loading...";
             sleep(3);
-            // پاک کردن پیام پس از تأخیر
         }
     }
 }
@@ -1357,7 +1346,6 @@ public:
     getUserInput()
     {
         int userInput = 0;
-        // Get the user input without waiting for Enter
         userInput = getch() - '0';
         return userInput;
     }
@@ -1467,6 +1455,7 @@ void save(Game_board &game_board)
         }
     }
 
+    // ذخیره موقعیت جعبه تیر ها
     for (int i = 0; i < game_board.level.levelNumber; ++i)
     {
         save << game_board.ammo_Boxes[i].isRecive << endl;
@@ -1476,6 +1465,7 @@ void save(Game_board &game_board)
         }
     }
 
+    // ذخیره موقعیت واکسن ها
     for (int i = 0; i < game_board.level.levelNumber; ++i)
     {
         save << game_board.Vaccines[i].is_recive << endl;
@@ -1485,7 +1475,7 @@ void save(Game_board &game_board)
         }
     }
 
-    // save << static_cast<int>(game_board.timer.elapsed()) << endl;
+    save << static_cast<int>(game_board.timer.elapsed()) << endl;
 
     // بستن فایل
     save.close();
@@ -1519,7 +1509,7 @@ int main()
         }
         if (userInput == 'w' || userInput == 'a' || userInput == 's' || userInput == 'd')
         {
-            game_board.player.move(userInput); // حرکت بازیکن بر اساس جهت حرکت
+            game_board.player.move(userInput); 
             game_board.player.vaccineCheck(game_board.Vaccines, game_board.level.levelNumber, game_board.vaccine_Details, game_board.credit.CreditNumber);
             game_board.player.ammoBoxCheck(game_board.ammo_Boxes, game_board.level.levelNumber, game_board.ammo_Details, game_board.gun.AmmoMagazine);
             for (int i = 0; i < game_board.level.levelNumber; i++)
@@ -1527,12 +1517,7 @@ int main()
                 game_board.zombies[i].ZombiesCheck(game_board.player, game_board.level.levelNumber, game_board.health.HealthNumber);
             }
         }
-        // userInput_shoot = getUserInput_move_shoot(); // دریافت جهت تیر
-        // game_board.gun.shoot(userInput_shoot, game_board.zombies, game_board.player);
-        // if (userInput == 'T' || userInput == 't')
-        // {
-        //     game_board.gun.shoot(userInput, game_board.zombies, game_board.player, game_board.kill.KillNumber);
-        // }
+        
         if (userInput == 't' || userInput == 'g' || userInput == 'f' || userInput == 'h' || userInput == 'G' || userInput == 'F' || userInput == 'T' || userInput == 'H')
         {
             game_board.gun.shoot(userInput, game_board.zombies, game_board.player, game_board.kill_, game_board.level.levelNumber, game_board.round);
