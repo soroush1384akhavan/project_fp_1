@@ -19,6 +19,7 @@
 using namespace std;
 
 int count_m = 0;
+bool is_mute = false;
 class Game_board;
 void Header(Game_board &);
 int main();
@@ -60,6 +61,14 @@ public:
 // void fireSound()
 // {
 //     PlaySound(TEXT("bomb_explosion.wav"), NULL, SND_SYNC);
+// }
+// void reloadSound()
+// {
+//     PlaySound(TEXT("reload.wav"), NULL, SND_SYNC);
+// }
+// void pointSound()
+// {
+//     PlaySound(TEXT("get_point.wav"), NULL, SND_SYNC);
 // }
 // void winSound()
 // {
@@ -473,28 +482,29 @@ public:
             if (AmmoNumber > 0)
             {
                 AmmoNumber--;
-                // fireSound();
-                for (int i = 0; i <= Level; i++)
-                {
-                    if (zombies[i].isActive && zombies[i].x == player.x && 0 <= (player.y - zombies[i].y) && (player.y - zombies[i].y) <= range)
+                if (!is_mute)
+                    // fireSound();
+                    for (int i = 0; i <= Level; i++)
                     {
-                        zombies[i].isActive = false;
-                        kill_.KillNumber++;
-                        kill_.count(round);
-                        break;
+                        if (zombies[i].isActive && zombies[i].x == player.x && 0 <= (player.y - zombies[i].y) && (player.y - zombies[i].y) <= range)
+                        {
+                            zombies[i].isActive = false;
+                            kill_.KillNumber++;
+                            kill_.count(round);
+                            break;
+                        }
+                        else if (zombies[i].isActive && zombies[i].x == player.x)
+                        {
+                            cout << "\033[" << 10 << ";" << 25 << "H";
+                            cout << "Zombie is not in range! come closer.";
+                            sleep(1);
+                            // پاک کردن پیام پس از تأخیر
+                            cout << "\033[" << 10 << ";" << 17 << "H";
+                            cout << "                          ";
+                            cout << "\033[" << 20 << ";" << 1 << "H";
+                            break;
+                        }
                     }
-                    else if (zombies[i].isActive && zombies[i].x == player.x)
-                    {
-                        cout << "\033[" << 10 << ";" << 25 << "H";
-                        cout << "Zombie is not in range! come closer.";
-                        sleep(1);
-                        // پاک کردن پیام پس از تأخیر
-                        cout << "\033[" << 10 << ";" << 17 << "H";
-                        cout << "                          ";
-                        cout << "\033[" << 20 << ";" << 1 << "H";
-                        break;
-                    }
-                }
             }
             else
             {
@@ -513,28 +523,30 @@ public:
             if (AmmoNumber > 0)
             {
                 AmmoNumber--;
-                // fireSound();
-                for (int i = 0; i <= Level; i++)
-                {
-                    if (zombies[i].isActive && zombies[i].x == player.x && 0 <= zombies[i].y - player.y && zombies[i].y - player.y <= range)
+                if (!is_mute)
+                    // fireSound();
+                    for (int i = 0; i <= Level; i++)
                     {
-                        zombies[i].isActive = false;
-                        kill_.KillNumber++;
-                        kill_.count(round);
-                        break;
+                        if (zombies[i].isActive && zombies[i].x == player.x && 0 <= zombies[i].y - player.y && zombies[i].y - player.y <= range)
+                        {
+                            zombies[i].isActive = false;
+                            kill_.KillNumber++;
+                            kill_.count(round);
+                            // cout << "Zombie hit! Zombie at (" << zombies[i].x << ", " << zombies[i].y << ") eliminated." << endl;
+                            break;
+                        }
+                        else if (zombies[i].isActive && zombies[i].x == player.x)
+                        {
+                            cout << "\033[" << 10 << ";" << 25 << "H";
+                            cout << "Zombie is not in range! come closer.";
+                            sleep(1);
+                            // پاک کردن پیام پس از تأخیر
+                            cout << "\033[" << 10 << ";" << 17 << "H";
+                            cout << "                          ";
+                            cout << "\033[" << 20 << ";" << 1 << "H";
+                            break;
+                        }
                     }
-                    else if (zombies[i].isActive && zombies[i].x == player.x)
-                    {
-                        cout << "\033[" << 10 << ";" << 25 << "H";
-                        cout << "Zombie is not in range! come closer.";
-                        sleep(1);
-                        // پاک کردن پیام پس از تأخیر
-                        cout << "\033[" << 10 << ";" << 17 << "H";
-                        cout << "                          ";
-                        cout << "\033[" << 20 << ";" << 1 << "H";
-                        break;
-                    }
-                }
             }
             else
             {
@@ -553,28 +565,30 @@ public:
             if (AmmoNumber > 0)
             {
                 AmmoNumber--;
-                // fireSound();
-                for (int i = 0; i <= Level; i++)
-                {
-                    if (zombies[i].isActive && zombies[i].y == player.y && 0 <= zombies[i].x - player.x && zombies[i].x - player.x <= range)
+                if (!is_mute)
+                    // fireSound();
+                    for (int i = 0; i <= Level; i++)
                     {
-                        zombies[i].isActive = false;
-                        kill_.KillNumber++;
-                        kill_.count(round);
-                        break;
+                        if (zombies[i].isActive && zombies[i].y == player.y && 0 <= zombies[i].x - player.x && zombies[i].x - player.x <= range)
+                        {
+                            zombies[i].isActive = false;
+                            kill_.KillNumber++;
+                            kill_.count(round);
+                            // cout << "Zombie hit! Zombie at (" << zombies[i].x << ", " << zombies[i].y << ") eliminated." << endl;
+                            break;
+                        }
+                        else if (zombies[i].isActive && zombies[i].y == player.y)
+                        {
+                            cout << "\033[" << 10 << ";" << 25 << "H";
+                            cout << "Zombie is not in range! come closer.";
+                            sleep(1);
+                            // پاک کردن پیام پس از تأخیر
+                            cout << "\033[" << 10 << ";" << 17 << "H";
+                            cout << "                          ";
+                            cout << "\033[" << 20 << ";" << 1 << "H";
+                            break;
+                        }
                     }
-                    else if (zombies[i].isActive && zombies[i].y == player.y)
-                    {
-                        cout << "\033[" << 10 << ";" << 25 << "H";
-                        cout << "Zombie is not in range! come closer.";
-                        sleep(1);
-                        // پاک کردن پیام پس از تأخیر
-                        cout << "\033[" << 10 << ";" << 17 << "H";
-                        cout << "                          ";
-                        cout << "\033[" << 20 << ";" << 1 << "H";
-                        break;
-                    }
-                }
             }
             else
             {
@@ -594,28 +608,30 @@ public:
             if (AmmoNumber > 0)
             {
                 AmmoNumber--;
-                // fireSound();
-                for (int i = 0; i <= Level; i++)
-                {
-                    if (zombies[i].isActive && zombies[i].y == player.y && 0 <= player.x - zombies[i].x && player.x - zombies[i].x <= range)
+                if (!is_mute)
+                    // fireSound();
+                    for (int i = 0; i <= Level; i++)
                     {
-                        zombies[i].isActive = false;
-                        kill_.KillNumber++;
-                        kill_.count(round);
-                        break;
+                        if (zombies[i].isActive && zombies[i].y == player.y && 0 <= player.x - zombies[i].x && player.x - zombies[i].x <= range)
+                        {
+                            zombies[i].isActive = false;
+                            kill_.KillNumber++;
+                            kill_.count(round);
+                            // cout << "Zombie hit! Zombie at (" << zombies[i].x << ", " << zombies[i].y << ") eliminated." << endl;
+                            break;
+                        }
+                        else if (zombies[i].isActive && zombies[i].y == player.y)
+                        {
+                            cout << "\033[" << 10 << ";" << 25 << "H";
+                            cout << "Zombie is not in range! come closer.";
+                            sleep(1);
+                            // پاک کردن پیام پس از تأخیر
+                            cout << "\033[" << 10 << ";" << 17 << "H";
+                            cout << "                          ";
+                            cout << "\033[" << 20 << ";" << 1 << "H";
+                            break;
+                        }
                     }
-                    else if (zombies[i].isActive && zombies[i].y == player.y)
-                    {
-                        cout << "\033[" << 10 << ";" << 25 << "H";
-                        cout << "Zombie is not in range! come closer.";
-                        sleep(1);
-                        // پاک کردن پیام پس از تأخیر
-                        cout << "\033[" << 10 << ";" << 17 << "H";
-                        cout << "                          ";
-                        cout << "\033[" << 20 << ";" << 1 << "H";
-                        break;
-                    }
-                }
             }
             else
             {
@@ -631,7 +647,9 @@ public:
     }
     void reload(char direction)
     {
-        int freeMag = MagazineSize - AmmoNumber;
+        if (!is_mute)
+            // reloadSound();
+            int freeMag = MagazineSize - AmmoNumber;
 
         if (direction == 'r' || direction == 'R')
         {
@@ -1062,7 +1080,6 @@ public:
 class Game_Setting
 {
 public:
-    bool is_mute = true;
     int index = 0;
 
     void Setting(Game_board &game_board)
@@ -1262,23 +1279,35 @@ public:
         {
             game_board.print_Game_board();
             game_Setting.index = 1;
-            // startSound();
+            if (!is_mute)
+            {
+                // startSound();
+            }
         }
 
         else if (userInput == 2)
         {
-            // startSound();
+            if (!is_mute)
+            {
+                // startSound();
+            }
             load(game_board);
             game_board.print_Game_board();
         }
         else if (userInput == 3)
         {
-            // menuSound();
+            if (!is_mute)
+            {
+                // menuSound();
+            }
             game_Setting.Setting(game_board);
         }
         else if (userInput == 4)
         {
-            // menuSound();
+            if (!is_mute)
+            {
+                // menuSound();
+            }
             Game_credit(game_board);
         }
         else if (userInput == 6)
@@ -1326,7 +1355,6 @@ bool lose(Game_board &game_board)
 {
     if (game_board.health.HealthNumber == 0)
     {
-
         return true;
     }
 
@@ -1613,7 +1641,11 @@ int main()
             Clear_scr();
             game_board.Reset_position();
             game_board.print_Game_board();
-            // winSound();
+
+            if (!is_mute)
+            {
+                // winSound();
+            }
         }
     }
     if (lose(game_board))
@@ -1656,6 +1688,9 @@ int main()
             return 0;
         }
     }
-    // loseSound();
+    if (!is_mute)
+    {
+        // loseSound();
+    }
     return 0;
 }
