@@ -287,7 +287,7 @@ public:
         {
             x = newX;
             y = newY;
-            // Beep(523, 5);
+            // Beep(700, 155);
         }
     }
 
