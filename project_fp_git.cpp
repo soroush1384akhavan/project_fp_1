@@ -1606,7 +1606,7 @@ int main()
                 cout << "Now it is time to return to the Earth" << endl;
                 cout << "Good Bye!" << endl;
                 sleep(5);
-                // Header();
+                Header(game_board);
             }
             else
             {
