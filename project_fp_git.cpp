@@ -20,7 +20,7 @@ using namespace std;
 
 int count_m = 0;
 int count_s = 0;
-bool is_mute;
+bool is_mute = false;
 class Game_board;
 void Header(Game_board &);
 int main();
@@ -309,7 +309,10 @@ public:
                 cout << "\033[" << 10 << ";" << 17 << "H";
                 cout << "                          ";
                 cout << "\033[" << 20 << ";" << 1 << "H";
-
+                if (!is_mute)
+                {
+                    pointSound();
+                }
                 credit += level + 1;
                 break;
             }
@@ -486,9 +489,9 @@ public:
                 AmmoNumber--;
                 if (!is_mute)
                     fireSound();
-                for (int i = 0; i <= Level; i++)
+                for (int i = 0; i < Level; i++)
                 {
-                    if (zombies[i].isActive && zombies[i].x == player.x && 0 <= (player.y - zombies[i].y) && (player.y - zombies[i].y) <= range)
+                    if (zombies[i].isActive && zombies[i].x == player.x && 0 <= (player.y - zombies[i].y) && (player.y - zombies[i].y) <= range && zombies[i].isActive==true)
                     {
                         zombies[i].isActive = false;
                         kill_.KillNumber++;
@@ -527,9 +530,9 @@ public:
                 AmmoNumber--;
                 if (!is_mute)
                     fireSound();
-                for (int i = 0; i <= Level; i++)
+                for (int i = 0; i < Level; i++)
                 {
-                    if (zombies[i].isActive && zombies[i].x == player.x && 0 <= zombies[i].y - player.y && zombies[i].y - player.y <= range)
+                    if (zombies[i].isActive && zombies[i].x == player.x && 0 <= zombies[i].y - player.y && zombies[i].y - player.y <= range && zombies[i].isActive==true)
                     {
                         zombies[i].isActive = false;
                         kill_.KillNumber++;
@@ -568,9 +571,9 @@ public:
                 AmmoNumber--;
                 if (!is_mute)
                     fireSound();
-                for (int i = 0; i <= Level; i++)
+                for (int i = 0; i < Level; i++)
                 {
-                    if (zombies[i].isActive && zombies[i].y == player.y && 0 <= zombies[i].x - player.x && zombies[i].x - player.x <= range)
+                    if (zombies[i].isActive && zombies[i].y == player.y && 0 <= zombies[i].x - player.x && zombies[i].x - player.x <= range && zombies[i].isActive==true)
                     {
                         zombies[i].isActive = false;
                         kill_.KillNumber++;
@@ -610,9 +613,9 @@ public:
                 AmmoNumber--;
                 if (!is_mute)
                     fireSound();
-                for (int i = 0; i <= Level; i++)
+                for (int i = 0; i < Level; i++)
                 {
-                    if (zombies[i].isActive && zombies[i].y == player.y && 0 <= player.x - zombies[i].x && player.x - zombies[i].x <= range)
+                    if (zombies[i].isActive && zombies[i].y == player.y && 0 <= player.x - zombies[i].x && player.x - zombies[i].x <= range && zombies[i].isActive==true)
                     {
                         zombies[i].isActive = false;
                         kill_.KillNumber++;
@@ -1096,47 +1099,42 @@ class Game_Setting
 {
 public:
     int index = 0;
-    bool is_mute = true;
+    // bool is_mute = true;
 
     void Setting(Game_board &game_board)
     {
-        Clear_scr();
-        cout << "final level is: 20" << endl;
-        if (is_mute)
+        while (true)
         {
-            cout << "Sound is not mute!" << endl;
-            cout << "Do you want to mute the sound?" << endl;
-        }
-        else if (!is_mute)
-        {
-            cout << "Sound is mute!" << endl;
-            cout << "Do you want to unmute the sound?" << endl;
-        }
-
-        char step = getUserInput_setting();
-
-        if (step == 'y')
-        {
-            if (is_mute == true)
+            Clear_scr();
+            cout << "final level is: 20" << endl;
+            if (is_mute == false)
             {
-                is_mute = false;
+                cout << "Sound is not mute!" << endl;
+                cout << "Do you want to mute the sound?" << endl;
             }
-            else if (is_mute == false)
+            else if (is_mute == true)
             {
-                is_mute = true;
+                cout << "Sound is mute!" << endl;
+                cout << "Do you want to unmute the sound?" << endl;
             }
 
-            Setting(game_board);
-        }
-        else if (step == 'n')
-        {
-            if (index == 0)
+            char step = getUserInput_setting();
+
+            if (step == 'y')
             {
-                Header(game_board);
+                is_mute = !is_mute; // تغییر وضعیت میوت
             }
-            else
+            else if (step == 'n')
             {
-                game_board.print_Game_board();
+                if (index == 0)
+                {
+                    Header(game_board);
+                }
+                else
+                {
+                    game_board.print_Game_board();
+                }
+                break; // خروج از حلقه
             }
         }
     }
@@ -1536,7 +1534,7 @@ int main()
         {
             save(game_board);
         }
-        if (userInput == 'w' || userInput == 'a' || userInput == 's' || userInput == 'd')
+        if (userInput == 'w' || userInput == 'a' || userInput == 's' || userInput == 'd'|| userInput == 'W'|| userInput == 'A'|| userInput == 'S'|| userInput == 'D')
         {
             game_board.player.move(userInput);
             game_board.player.vaccineCheck(game_board.Vaccines, game_board.level.levelNumber, game_board.vaccine_Details, game_board.credit.CreditNumber);
