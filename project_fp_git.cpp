@@ -19,6 +19,7 @@
 using namespace std;
 
 int count_m = 0;
+int count_s = 0;
 bool is_mute = false;
 class Game_board;
 void Header(Game_board &);
@@ -197,10 +198,10 @@ public:
     {
         if (!is_recive)
         {
-            cout << "\033[" << y << ";" << x << "H"; 
-            cout << "\e[0;33m";                      
+            cout << "\033[" << y << ";" << x << "H";
+            cout << "\e[0;33m";
             cout << "V";
-            cout << "\033[0m"; 
+            cout << "\033[0m";
             cout << "\033[" << 20 << ";" << 1 << "H";
         }
     }
@@ -243,9 +244,9 @@ public:
         if (!isRecive)
         {
             cout << "\033[" << y << ";" << x << "H";
-            cout << "\033[36m";                     
+            cout << "\033[36m";
             cout << "A";
-            cout << "\033[0m"; 
+            cout << "\033[0m";
             cout << "\033[" << 20 << ";" << 1 << "H";
         }
     }
@@ -287,7 +288,7 @@ public:
         {
             x = newX;
             y = newY;
-            // Beep(700, 155);
+            // Beep(700, 75);
         }
     }
 
@@ -337,10 +338,10 @@ public:
 
     void display()
     {
-        cout << "\033[" << y << ";" << x << "H"; 
-        cout << "\033[32m";                      
+        cout << "\033[" << y << ";" << x << "H";
+        cout << "\033[32m";
         cout << "P";
-        cout << "\033[0m"; 
+        cout << "\033[0m";
         cout << "\033[" << 20 << ";" << 1 << "H";
     }
 };
@@ -377,10 +378,10 @@ public:
     {
         if (isActive)
         {
-            cout << "\033[" << y << ";" << x << "H"; 
-            cout << "\033[31m";                     
+            cout << "\033[" << y << ";" << x << "H";
+            cout << "\033[31m";
             cout << "Z";
-            cout << "\033[0m"; 
+            cout << "\033[0m";
             cout << "\033[" << 20 << ";" << 1 << "H";
         }
     }
@@ -532,7 +533,6 @@ public:
                             zombies[i].isActive = false;
                             kill_.KillNumber++;
                             kill_.count(round);
-                            // cout << "Zombie hit! Zombie at (" << zombies[i].x << ", " << zombies[i].y << ") eliminated." << endl;
                             break;
                         }
                         else if (zombies[i].isActive && zombies[i].x == player.x)
@@ -574,7 +574,6 @@ public:
                             zombies[i].isActive = false;
                             kill_.KillNumber++;
                             kill_.count(round);
-                            // cout << "Zombie hit! Zombie at (" << zombies[i].x << ", " << zombies[i].y << ") eliminated." << endl;
                             break;
                         }
                         else if (zombies[i].isActive && zombies[i].y == player.y)
@@ -617,7 +616,6 @@ public:
                             zombies[i].isActive = false;
                             kill_.KillNumber++;
                             kill_.count(round);
-                            // cout << "Zombie hit! Zombie at (" << zombies[i].x << ", " << zombies[i].y << ") eliminated." << endl;
                             break;
                         }
                         else if (zombies[i].isActive && zombies[i].y == player.y)
@@ -705,10 +703,10 @@ public:
 
     void display()
     {
-        cout << "\033[" << y << ";" << x << "H"; 
-        cout << "\033[36m";                  
+        cout << "\033[" << y << ";" << x << "H";
+        cout << "\033[36m";
         cout << "D";
-        cout << "\033[0m"; 
+        cout << "\033[0m";
         cout << "\033[" << 20 << ";" << 1 << "H";
     }
 };
@@ -761,7 +759,6 @@ public:
             Clear_scr();
             cout << "\033[" << 10 << ";" << 45 << "H";
             cout << "Upgrade done successfully.Your magazine capacity is now  ." << MagazineSize;
-            
         }
         else if (MagazineSize == 7)
         {
@@ -911,7 +908,7 @@ public:
         }
     }
 
-    Timer timer; 
+    Timer timer;
 
     void print_Game_board()
     {
@@ -962,7 +959,7 @@ public:
         {
             for (int j = 0; j < level.levelNumber; j++)
             {
-                if (!is_same_position_z_v(zombies[i], Vaccines[j]) && !is_same_position_V(Vaccines[i], Vaccines[j], i, j) && (Vaccines[i].x != 2 || Vaccines[i].y != 4) && (Vaccines[i].x != 16 || Vaccines[i].y != 18))
+                if ((!is_same_position_z_v(zombies[i], Vaccines[j]) || count_s != 0) && !is_same_position_V(Vaccines[i], Vaccines[j], i, j) && (Vaccines[i].x != 2 || Vaccines[i].y != 4) && (Vaccines[i].x != 16 || Vaccines[i].y != 18))
                 {
                     Vaccines[i].display();
                 }
@@ -976,7 +973,7 @@ public:
         {
             for (int j = 0; j < level.levelNumber; j++)
             {
-                if (!is_same_position_z_a(zombies[i], ammo_Boxes[j]) && !is_same_position_v_a(Vaccines[i], ammo_Boxes[j]) && !is_same_position_A(ammo_Boxes[i], ammo_Boxes[j], i, j) && (ammo_Boxes[i].x != 2 || ammo_Boxes[i].y != 4) && (ammo_Boxes[i].x != 16 || ammo_Boxes[i].y != 18))
+                if ((!is_same_position_z_a(zombies[i], ammo_Boxes[j]) || count_s != 0) && !is_same_position_v_a(Vaccines[i], ammo_Boxes[j]) && !is_same_position_A(ammo_Boxes[i], ammo_Boxes[j], i, j) && (ammo_Boxes[i].x != 2 || ammo_Boxes[i].y != 4) && (ammo_Boxes[i].x != 16 || ammo_Boxes[i].y != 18))
                 {
                     ammo_Boxes[i].display();
                 }
@@ -1206,9 +1203,9 @@ void load(Game_board &game_board)
         }
 
         // خواندن زمان از فایل
-         int elapsed_seconds;
-         saved >> elapsed_seconds;
-         game_board.timer.setSeconds(static_cast<double>(elapsed_seconds)); // تنظیم زمان خوانده شده به تایمر
+        int elapsed_seconds;
+        saved >> elapsed_seconds;
+        game_board.timer.setSeconds(static_cast<double>(elapsed_seconds)); // تنظیم زمان خوانده شده به تایمر
 
         saved.close();
         if (count_m == 0)
@@ -1252,7 +1249,6 @@ public:
     }
     void Options(Game_board &game_board)
     {
-        // Game_board gameboard;
         Game_Setting game_Setting;
 
         cout << "𝟙-𝕟𝕖𝕨 𝕘𝕒𝕞𝕖" << endl;
@@ -1330,6 +1326,9 @@ public:
             }
             if (userInput_u == 'y' || userInput_u == 'Y')
             {
+                Clear_scr();
+                cout << "Good bye!";
+                sleep(5);
                 exit(0);
             }
             else
@@ -1501,15 +1500,16 @@ int main()
     char userInput;
     while (!(lose(game_board)))
     {
+        count_s++;
         userInput = getUserInput(); // دریافت جهت حرکت
-        // save game;
+        game_board.round.RoundNumber++;
         if (userInput == '/')
         {
             save(game_board);
         }
         if (userInput == 'w' || userInput == 'a' || userInput == 's' || userInput == 'd')
         {
-            game_board.player.move(userInput); 
+            game_board.player.move(userInput);
             game_board.player.vaccineCheck(game_board.Vaccines, game_board.level.levelNumber, game_board.vaccine_Details, game_board.credit.CreditNumber);
             game_board.player.ammoBoxCheck(game_board.ammo_Boxes, game_board.level.levelNumber, game_board.ammo_Details, game_board.gun.AmmoMagazine);
             for (int i = 0; i < game_board.level.levelNumber; i++)
@@ -1517,7 +1517,7 @@ int main()
                 game_board.zombies[i].ZombiesCheck(game_board.player, game_board.level.levelNumber, game_board.health.HealthNumber);
             }
         }
-        
+
         if (userInput == 't' || userInput == 'g' || userInput == 'f' || userInput == 'h' || userInput == 'G' || userInput == 'F' || userInput == 'T' || userInput == 'H')
         {
             game_board.gun.shoot(userInput, game_board.zombies, game_board.player, game_board.kill_, game_board.level.levelNumber, game_board.round);
@@ -1533,6 +1533,8 @@ int main()
             userInput_u = getUserInput();
             if (userInput_u == 'y')
             {
+                cout << "Good bye!";
+                sleep(5);
                 return 0;
             }
             else
@@ -1611,6 +1613,7 @@ int main()
 
         if (win(game_board))
         {
+            count_s = 0;
             for (int i = 0; i < game_board.level.levelNumber; i++)
             {
                 game_board.zombies[i].isActive = true;
