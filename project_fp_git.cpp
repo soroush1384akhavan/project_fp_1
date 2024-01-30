@@ -214,7 +214,7 @@ public:
     Ammo_Box()
     {
         setRandomCoordinates();
-        bool isRecive;
+        isRecive = false;
     }
     void setRandomCoordinates()
     {
@@ -1197,18 +1197,7 @@ void load(Game_board &game_board)
                 saved.ignore();
             }
         }
-        for (int i = 0; i < game_board.level.levelNumber; ++i)
-        {
-            saved >> game_board.Vaccines[i].is_recive; // خواندن وضعیت فعال بودن
-            if (!game_board.Vaccines[i].is_recive)
-            {
-                saved >> game_board.Vaccines[i].x >> game_board.Vaccines[i].y;
-            }
-            else
-            {
-                saved.ignore();
-            }
-        }
+
         for (int i = 0; i < game_board.level.levelNumber; ++i)
         {
             saved >> game_board.ammo_Boxes[i].isRecive; // خواندن وضعیت فعال بودن
@@ -1222,11 +1211,24 @@ void load(Game_board &game_board)
             }
         }
 
+        for (int i = 0; i < game_board.level.levelNumber; ++i)
+        {
+            saved >> game_board.Vaccines[i].is_recive; // خواندن وضعیت فعال بودن
+            if (!game_board.Vaccines[i].is_recive)
+            {
+                saved >> game_board.Vaccines[i].x >> game_board.Vaccines[i].y;
+            }
+            else
+            {
+                saved.ignore();
+            }
+        }
+
         // خواندن زمان از فایل
-        int elapsed_seconds;
-        saved >> elapsed_seconds;
+        // int elapsed_seconds;
+        // saved >> elapsed_seconds;
         // game_board.timer.reset();                                          // تنظیم مجدد تایمر
-        game_board.timer.setSeconds(static_cast<double>(elapsed_seconds)); // تنظیم زمان خوانده شده به تایمر
+        // game_board.timer.setSeconds(static_cast<double>(elapsed_seconds)); // تنظیم زمان خوانده شده به تایمر
 
         saved.close();
         if (count_m == 0)
@@ -1454,15 +1456,6 @@ void save(Game_board &game_board)
 
     for (int i = 0; i < game_board.level.levelNumber; ++i)
     {
-        save << game_board.Vaccines[i].is_recive << endl;
-        if (!game_board.Vaccines[i].is_recive)
-        {
-            save << game_board.Vaccines[i].x << " " << game_board.Vaccines[i].y << endl;
-        }
-    }
-
-    for (int i = 0; i < game_board.level.levelNumber; ++i)
-    {
         save << game_board.ammo_Boxes[i].isRecive << endl;
         if (!game_board.ammo_Boxes[i].isRecive)
         {
@@ -1470,7 +1463,16 @@ void save(Game_board &game_board)
         }
     }
 
-    save << static_cast<int>(game_board.timer.elapsed()) << endl;
+    for (int i = 0; i < game_board.level.levelNumber; ++i)
+    {
+        save << game_board.Vaccines[i].is_recive << endl;
+        if (!game_board.Vaccines[i].is_recive)
+        {
+            save << game_board.Vaccines[i].x << " " << game_board.Vaccines[i].y << endl;
+        }
+    }
+
+    // save << static_cast<int>(game_board.timer.elapsed()) << endl;
 
     // بستن فایل
     save.close();
@@ -1518,7 +1520,7 @@ int main()
         // {
         //     game_board.gun.shoot(userInput, game_board.zombies, game_board.player, game_board.kill.KillNumber);
         // }
-        if (userInput == 't' || userInput == 'g' || userInput == 'f' || userInput == 'h'|| userInput == 'G'|| userInput == 'F'|| userInput == 'T'|| userInput == 'H')
+        if (userInput == 't' || userInput == 'g' || userInput == 'f' || userInput == 'h' || userInput == 'G' || userInput == 'F' || userInput == 'T' || userInput == 'H')
         {
             game_board.gun.shoot(userInput, game_board.zombies, game_board.player, game_board.kill_, game_board.level.levelNumber, game_board.round);
         }
