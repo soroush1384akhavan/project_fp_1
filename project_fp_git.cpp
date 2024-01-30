@@ -834,31 +834,6 @@ public:
     }
 };
 
-// class ShowMenu
-// {
-// public:
-//     void printMenu(){
-//         Clear_scr();
-//         cout << "0-𝕣𝕖𝕥𝕦𝕣𝕟 𝕥𝕖 𝕘𝕒𝕞𝕖" << endl;
-//         cout << "𝟙-𝕟𝕖𝕨 𝕘𝕒𝕞𝕖" << endl;
-//         cout << "𝟚-𝕊𝕖𝕥𝕥𝕚𝕟𝕘𝕤" << endl;
-//         cout << "𝟛-𝔼𝕩𝕚𝕥" << endl;
-//     }
-
-//     void resume(){
-
-//     }
-//     void newGame(){
-
-//     }
-//     void setting(Game_Setting &game_setting){
-//         game_setting.Setting();
-//     }
-//     void exit(){
-//         // Header();
-//     }
-// };
-
 class Timer
 {
 private:
@@ -1139,7 +1114,7 @@ public:
             }
             else
             {
-                // back to game
+                game_board.print_Game_board();
             }
         }
     }
@@ -1273,12 +1248,8 @@ public:
     {
         // Game_board gameboard;
         Game_Setting game_Setting;
-        if (count_m == 0)
-            cout << "𝟙-𝕟𝕖𝕨 𝕘𝕒𝕞𝕖" << endl;
-        else
-        {
-            cout << "𝟙-ℝ𝕖𝕤𝕦𝕞𝕖" << endl;
-        }
+
+        cout << "𝟙-𝕟𝕖𝕨 𝕘𝕒𝕞𝕖" << endl;
         cout << "𝟚-𝕣𝕖𝕤𝕦𝕞𝕖" << endl;
         cout << "𝟛-𝕊𝕖𝕥𝕥𝕚𝕟𝕘𝕤" << endl;
         cout << "𝟜-ℂ𝕣𝕖𝕕𝕚𝕥𝕤" << endl;
@@ -1423,9 +1394,31 @@ void Header(Game_board &game_board) // نمایش منوی اصلی بازی
     main.Options(game_board);
 }
 
-// int colectAmmo(Gun &gun){
-//     gun.AmmoMagazine++;
-// }
+void printMenu()
+{
+    Clear_scr();
+    cout << "0-𝕣𝕖𝕥𝕦𝕣𝕟 𝕥𝕖 𝕘𝕒𝕞𝕖" << endl;
+    cout << "𝟙-𝕟𝕖𝕨 𝕘𝕒𝕞𝕖" << endl;
+    cout << "𝟚-𝕊𝕖𝕥𝕥𝕚𝕟𝕘𝕤" << endl;
+    cout << "𝟛-𝔼𝕩𝕚𝕥" << endl;
+}
+
+void resume_(Game_board &game_board)
+{
+    game_board.print_Game_board();
+}
+void newGame()
+{
+}
+void inGameSetting(Game_Setting &game_setting, Game_board &game_board)
+{
+    game_setting.Setting(game_board);
+}
+void exit(Game_board &game_board)
+{
+    Header(game_board);
+}
+
 void save(Game_board &game_board)
 {
     ofstream save("save_file.txt", ios::out);
@@ -1507,10 +1500,10 @@ int main()
             game_board.player.move(userInput); // حرکت بازیکن بر اساس جهت حرکت
             game_board.player.vaccineCheck(game_board.Vaccines, game_board.level.levelNumber, game_board.vaccine_Details, game_board.credit.CreditNumber);
             game_board.player.ammoBoxCheck(game_board.ammo_Boxes, game_board.level.levelNumber, game_board.ammo_Details, game_board.gun.AmmoMagazine);
-            // for (int i = 0; i < game_board.level.levelNumber; i++)
-            // {
-            //     game_board.zombies[i].ZombiesCheck(game_board.player, game_board.level.levelNumber, game_board.health.HealthNumber);
-            // }
+            for (int i = 0; i < game_board.level.levelNumber; i++)
+            {
+                game_board.zombies[i].ZombiesCheck(game_board.player, game_board.level.levelNumber, game_board.health.HealthNumber);
+            }
         }
         // userInput_shoot = getUserInput_move_shoot(); // دریافت جهت تیر
         // game_board.gun.shoot(userInput_shoot, game_board.zombies, game_board.player);
@@ -1518,7 +1511,7 @@ int main()
         // {
         //     game_board.gun.shoot(userInput, game_board.zombies, game_board.player, game_board.kill.KillNumber);
         // }
-        if (userInput == 't' || userInput == 'g' || userInput == 'f' || userInput == 'h'|| userInput == 'G'|| userInput == 'F'|| userInput == 'T'|| userInput == 'H')
+        if (userInput == 't' || userInput == 'g' || userInput == 'f' || userInput == 'h')
         {
             game_board.gun.shoot(userInput, game_board.zombies, game_board.player, game_board.kill_, game_board.level.levelNumber, game_board.round);
         }
@@ -1542,10 +1535,9 @@ int main()
 
         if (count % 2 == 0)
         {
-            for (int i = 0; i < game_board.level.levelNumber; i++)
+            for (int i = 0; i < 20; i++)
             {
                 game_board.zombies[i].move(game_board.player, game_board.zombies, game_board.level.levelNumber, i); // حرکت زامبی‌ها به سمت بازیکن
-                game_board.zombies[i].ZombiesCheck(game_board.player, game_board.level.levelNumber, game_board.health.HealthNumber);
             }
         }
         game_board.print_Game_board();
@@ -1588,8 +1580,26 @@ int main()
         if (userInput == 'm' || userInput == 'M')
         {
             count_m++;
-            save(game_board);
-            main();
+            printMenu();
+            char userInput_m = getUserInput();
+
+            if(userInput_m == '0')
+            {
+                resume_(game_board);
+            }
+            else if(userInput_m == '1')
+            {
+                newGame();
+            }
+            else if (userInput_m == '2')
+            {
+                inGameSetting(game_setting, game_board);
+            }
+            else if(userInput_m == '3')
+            {
+                exit(game_board);
+            }
+
         }
 
         if (win(game_board))
