@@ -1507,10 +1507,10 @@ int main()
             game_board.player.move(userInput); // حرکت بازیکن بر اساس جهت حرکت
             game_board.player.vaccineCheck(game_board.Vaccines, game_board.level.levelNumber, game_board.vaccine_Details, game_board.credit.CreditNumber);
             game_board.player.ammoBoxCheck(game_board.ammo_Boxes, game_board.level.levelNumber, game_board.ammo_Details, game_board.gun.AmmoMagazine);
-            for (int i = 0; i < game_board.level.levelNumber; i++)
-            {
-                game_board.zombies[i].ZombiesCheck(game_board.player, game_board.level.levelNumber, game_board.health.HealthNumber);
-            }
+            // for (int i = 0; i < game_board.level.levelNumber; i++)
+            // {
+            //     game_board.zombies[i].ZombiesCheck(game_board.player, game_board.level.levelNumber, game_board.health.HealthNumber);
+            // }
         }
         // userInput_shoot = getUserInput_move_shoot(); // دریافت جهت تیر
         // game_board.gun.shoot(userInput_shoot, game_board.zombies, game_board.player);
@@ -1518,7 +1518,7 @@ int main()
         // {
         //     game_board.gun.shoot(userInput, game_board.zombies, game_board.player, game_board.kill.KillNumber);
         // }
-        if (userInput == 't' || userInput == 'g' || userInput == 'f' || userInput == 'h')
+        if (userInput == 't' || userInput == 'g' || userInput == 'f' || userInput == 'h'|| userInput == 'G'|| userInput == 'F'|| userInput == 'T'|| userInput == 'H')
         {
             game_board.gun.shoot(userInput, game_board.zombies, game_board.player, game_board.kill_, game_board.level.levelNumber, game_board.round);
         }
@@ -1542,9 +1542,10 @@ int main()
 
         if (count % 2 == 0)
         {
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < game_board.level.levelNumber; i++)
             {
                 game_board.zombies[i].move(game_board.player, game_board.zombies, game_board.level.levelNumber, i); // حرکت زامبی‌ها به سمت بازیکن
+                game_board.zombies[i].ZombiesCheck(game_board.player, game_board.level.levelNumber, game_board.health.HealthNumber);
             }
         }
         game_board.print_Game_board();
