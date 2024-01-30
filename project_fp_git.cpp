@@ -21,6 +21,9 @@ using namespace std;
 int count_m = 0;
 class Game_board;
 void Header(Game_board &);
+int main();
+// char getUserInput();
+// class Gun;
 
 void Clear_scr()
 {
@@ -1257,24 +1260,16 @@ public:
         }
         if (userInput == 1)
         {
-            if (count_m == 0)
-            {
-                game_board.print_Game_board();
-                game_Setting.index = 1;
-                // startSound();
-            }
-            else
-            {
-                load(game_board);
-                game_board.print_Game_board();
-            }
+            game_board.print_Game_board();
+            game_Setting.index = 1;
+            // startSound();
         }
+
         else if (userInput == 2)
         {
             // startSound();
             load(game_board);
             game_board.print_Game_board();
-            game_Setting.index = 1;
         }
         else if (userInput == 3)
         {
@@ -1318,7 +1313,8 @@ public:
         }
     }
 
-    int getUserInput()
+    int
+    getUserInput()
     {
         int userInput = 0;
         userInput = getch() - '0';
@@ -1394,6 +1390,7 @@ void resume_(Game_board &game_board)
 }
 void newGame()
 {
+    main();
 }
 void inGameSetting(Game_Setting &game_setting, Game_board &game_board)
 {
@@ -1562,14 +1559,15 @@ int main()
         if (userInput == 'm' || userInput == 'M')
         {
             count_m++;
+            game_setting.index++;
             printMenu();
             char userInput_m = getUserInput();
 
-            if(userInput_m == '0')
+            if (userInput_m == '0')
             {
                 resume_(game_board);
             }
-            else if(userInput_m == '1')
+            else if (userInput_m == '1')
             {
                 newGame();
             }
@@ -1577,11 +1575,10 @@ int main()
             {
                 inGameSetting(game_setting, game_board);
             }
-            else if(userInput_m == '3')
+            else if (userInput_m == '3')
             {
                 exit(game_board);
             }
-
         }
 
         if (win(game_board))
