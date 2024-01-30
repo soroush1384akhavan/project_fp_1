@@ -344,6 +344,7 @@ public:
         cout << "\033[0m";
         cout << "\033[" << 20 << ";" << 1 << "H";
     }
+    
 };
 
 class Zombie
