@@ -5,7 +5,7 @@
       "name": "C/C++ Runner: Debug Session",
       "type": "cppdbg",
       "request": "launch",
-      "args": [],
+      "args": ["winmm"],
       "stopAtEntry": false,
       "externalConsole": true,
       "cwd": "c:/Users/sorou/OneDrive/Desktop/project_fp_1/sounds",
