@@ -152,7 +152,7 @@ public:
         {
             cout << "Dominating";
         }
-        if (KillNumber % 14 == 14)
+        if (KillNumber % 14 == 0)
         {
             cout << "Godlike";
         }
@@ -728,7 +728,21 @@ public:
     {
     }
 };
-
+void Help(){
+    Clear_scr();
+    cout << "Movement: \nW: up    A: left    D: right    S: down\n";
+    cout << endl;
+    cout << "Gun: \nT: upShoot    F: leftShoot    H: rightShoot    G: downShoot\nR: for reload\n";
+    cout << endl;
+    cout << "Other buttons:\n";
+    cout << "U: for upgrade\n";
+    cout << endl;
+    cout << "M: for Menu\n";
+    cout << endl;
+    cout << "/: for save game\n";
+    cout << endl;
+    cout << "E: for exit game\n";
+}
 class Health
 {
 public:
@@ -1305,6 +1319,12 @@ public:
                 // menuSound();
             }
             Game_credit(game_board);
+        }
+        else if( userInput == 5)
+        {
+            Help();
+            sleep(15);
+            Header(game_board);
         }
         else if (userInput == 6)
         {
